@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LumiLearn | Math Puzzle Game</title>
+    <link rel="stylesheet" href="jeux1.css" />
+</head>
+<body>
+    <!-- ============ Header (LumiLearn Style) ============ -->
+    <header class="main-header">
+    <div class="header-container">
+        <h1>🌟 LumiLearn</h1>
+        <nav class="desktop-nav">
+            <a href="jeux_en.html" class="home-btn">🏠 Return</a>
+            
+            <div class="game-controls">
+                <!-- All these now share the 'top-ctrl' class -->
+                <select id="difficulty" class="top-ctrl">
+                    <option value="easy">Easy (6)</option>
+                    <option value="medium">Medium (8)</option>
+                    <option value="hard">Hard (10)</option>
+                </select>
+                <button id="new_game" class="top-ctrl">New Puzzle</button>
+                <button id="reset_game" class="top-ctrl">Reset Score</button>
+            </div>
+        </nav>
+    </div>
+</header>
+
+    <main>
+        <div class="left_side">
+            <div id="target_box">
+                Target: <span id="target"></span>
+            </div>
+            <div id="expression">Your attempt</div>
+            
+            <h3>Select Numbers</h3>
+            <div id="numbers_container"></div>
+            
+            <h3>Select Operators</h3>
+            <div id="operators_container">
+                <button>+</button>
+                <button>-</button>
+                <button>*</button>
+                <button>/</button>
+            </div>
+            
+            <div id="game_actions">
+                <button id="attempt">Attempt</button>
+                <button id="undo">Undo</button>
+                <button id="restart">Restart</button>
+            </div>
+            <div id="message"></div>
+        </div>
+
+        <div class="right_side">
+            <div id="score_box">
+                Total Score: <span id="score">0</span>
+            </div>
+            <div id="bonus_info">
+                Difficulty Bonus: <span id="bonus">10</span>
+            </div>
+
+            <h3>History</h3>
+            <div id="history"></div>
+        </div>
+    </main>
+
+    <script src="jeux1_en.js"></script>
+</body>
+</html>

@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LumiLearn : Stories & Tales</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styleSIGHT.css" />
+  <style>
+    /* ===== Page hero ===== */
+    .page-hero {
+      background: linear-gradient(135deg, #FFE5F1 0%, #E0F7FF 100%);
+      padding: 50px 5%;
+      text-align: center;
+    }
+    .page-hero h2 { font-size: 2.2em; color: var(--color-primary); font-weight: 800; margin-bottom: 10px; }
+    .page-hero p { font-size: 1.1em; color: #666; }
+
+    /* ===== Filters bar ===== */
+    .filters-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      padding: 25px 5%;
+      background: white;
+      border-bottom: 3px solid var(--color-secondary);
+      position: sticky;
+      top: 70px;
+      z-index: 50;
+    }
+    .filter-label { font-weight: 700; color: #666; font-size: 0.9em; }
+    .filter-btn {
+      padding: 9px 20px;
+      border-radius: 25px;
+      border: 2px solid var(--color-accent);
+      background: white;
+      color: var(--color-accent);
+      font-weight: 700;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.85em;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--color-accent);
+      color: white;
+      transform: scale(1.05);
+    }
+    .filter-divider { width: 2px; height: 30px; background: #eee; }
+
+    /* ===== Stories grid ===== */
+    .stories-container {
+      padding: 50px 5%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .stories-container h3 {
+      font-size: 1.5em;
+      font-weight: 800;
+      color: var(--color-text);
+      margin-bottom: 30px;
+    }
+    .stories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 28px;
+    }
+
+    /* ===== Story card ===== */
+    .story-card {
+      background: white;
+      border-radius: 22px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      overflow: hidden;
+      transition: all 0.35s ease;
+      border: 2px solid transparent;
+      cursor: pointer;
+    }
+    .story-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.14);
+      border-color: var(--color-accent);
+    }
+    .story-cover {
+      height: 170px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 75px;
+      position: relative;
+    }
+    .story-langs {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      display: flex;
+      gap: 5px;
+    }
+    .lang-pill {
+      background: rgba(255,255,255,0.9);
+      border-radius: 10px;
+      font-size: 0.65em;
+      font-weight: 700;
+      padding: 2px 7px;
+      color: #333;
+    }
+    .story-info { padding: 18px 20px; }
+    .level-badge {
+      display: inline-block;
+      background: var(--color-purple);
+      color: white;
+      font-size: 0.72em;
+      font-weight: 700;
+      padding: 3px 12px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+    }
+    .story-info h4 {
+      font-size: 1.05em;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 6px;
+    }
+    .story-info p {
+      font-size: 0.82em;
+      color: #888;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+    .story-read-btn {
+      width: 100%;
+      padding: 10px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, var(--color-accent), var(--color-purple));
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 0.88em;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .story-read-btn:hover { opacity: 0.85; transform: scale(1.02); }
+
+    /* ===== Story Reader Modal ===== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: white;
+      border-radius: 24px;
+      width: 100%;
+      max-width: 750px;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 24px;
+      background: linear-gradient(135deg, var(--color-accent), var(--color-purple));
+      color: white;
+      flex-shrink: 0;
+    }
+    .modal-header h4 { font-size: 1.1em; font-weight: 700; }
+    .modal-close {
+      background: none; border: none; color: white;
+      font-size: 1.4em; cursor: pointer; padding: 0 4px; line-height: 1;
+    }
+
+    /* Language tabs inside modal */
+    .modal-lang-tabs {
+      display: flex;
+      border-bottom: 2px solid #eee;
+      flex-shrink: 0;
+    }
+    .modal-lang-tab {
+      flex: 1;
+      padding: 13px;
+      border: none;
+      background: none;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 0.9em;
+      cursor: pointer;
+      color: #aaa;
+      transition: all 0.3s;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+    }
+    .modal-lang-tab.active {
+      color: var(--color-accent);
+      border-bottom-color: var(--color-accent);
+    }
+
+    /* Story content */
+    .modal-story-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 30px;
+    }
+    .story-text {
+      display: none;
+      font-size: 1.05em;
+      line-height: 1.9;
+      color: #444;
+      white-space: pre-line;
+    }
+    .story-text.active { display: block; }
+    .story-text.rtl-text { direction: rtl; text-align: right; font-size: 1.1em; }
+
+    /* ===== Paginated reader ===== */
+    .reader-progress-wrap {
+      flex-shrink: 0;
+      padding: 14px 24px 0;
+    }
+    .reader-progress-track {
+      width: 100%;
+      height: 7px;
+      background: #eee;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .reader-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(135deg, var(--color-accent), var(--color-purple));
+      border-radius: 10px;
+      transition: width 0.35s ease;
+    }
+    .reader-page-counter {
+      text-align: center;
+      font-size: 0.78em;
+      font-weight: 700;
+      color: #aaa;
+      margin-top: 6px;
+      letter-spacing: 0.5px;
+    }
+    .modal-story-content {
+      display: flex;
+      flex-direction: column;
+      padding: 0 !important;
+      flex: 1;
+      overflow: hidden;
+    }
+    .reader-page-stage {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+      min-height: 220px;
+    }
+    .reader-page {
+      position: absolute;
+      inset: 0;
+      padding: 28px 32px;
+      overflow-y: auto;
+      opacity: 0;
+      transform: translateX(24px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none;
+      font-size: 1.08em;
+      line-height: 1.95;
+      color: #444;
+      white-space: pre-line;
+    }
+    .reader-page.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+    .reader-page:not(.active).slide-prev { transform: translateX(-24px); }
+    .story-text.rtl-text .reader-page { direction: rtl; text-align: right; font-size: 1.05em; }
+    .story-text.rtl-text .reader-page:not(.active) { transform: translateX(-24px); }
+    .story-text.rtl-text .reader-page:not(.active).slide-prev { transform: translateX(24px); }
+
+    .reader-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 24px;
+      border-top: 2px solid #f3f3f3;
+      flex-shrink: 0;
+      background: #fff;
+    }
+    .reader-nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 18px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(135deg, var(--color-accent), var(--color-purple));
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 0.88em;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      flex-shrink: 0;
+    }
+    .reader-nav-btn:hover:not(:disabled) { opacity: 0.88; transform: scale(1.04); }
+    .reader-nav-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .reader-dots {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 50%;
+    }
+    .reader-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #ddd;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: all 0.25s ease;
+      flex-shrink: 0;
+    }
+    .reader-dot.active {
+      background: var(--color-accent);
+      transform: scale(1.3);
+    }
+    @media(max-width:600px){
+      .reader-page { padding: 22px 20px; font-size: 1em; }
+      .reader-nav-btn span.btn-label { display: none; }
+      .reader-nav-btn { padding: 10px 14px; }
+      .reader-dots { max-width: 38%; }
+    }
+
+    /* ===== Cover colors ===== */
+    .c-pink { background: linear-gradient(135deg, #FF91AF, #FFD36E); }
+    .c-blue { background: linear-gradient(135deg, #6ED3CF, #B99BFF); }
+    .c-green { background: linear-gradient(135deg, #74C365, #6ED3CF); }
+    .c-yellow { background: linear-gradient(135deg, #FFD36E, #FF91AF); }
+    .c-purple { background: linear-gradient(135deg, #B99BFF, #FF91AF); }
+    .c-teal { background: linear-gradient(135deg, #6ED3CF, #74C365); }
+    .c-orange { background: linear-gradient(135deg, #FFD36E, #74C365); }
+    .c-rose { background: linear-gradient(135deg, #FF91AF, #B99BFF); }
+
+    @media(max-width:600px){
+      .stories-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+      .filter-divider { display: none; }
+    }
+    @media(max-width:380px){
+      .stories-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+<base target="_blank">
+</head>
+<body>
+
+  <!-- ============ Header ============ -->
+  <header class="main-header">
+    <h1>🌟 LumiLearn</h1>
+    <nav class="desktop-nav">
+      <a href="indexSIGHT_en.html">🏠 Home</a>
+      <a href="audio.html">🎧 Audio Books</a>
+      <a href="livres_en.html">📖 School Books</a>
+      <a href="kissas_en.html" style="background:var(--color-secondary);color:#333">📖 Stories</a>
+      <a href="articles.html">📚 Articles</a>
+      <a href="curriculum.html">🎓 Curriculum</a>
+      <a href="wikipedia.html">🌐 Wikipedia</a>
+      <a href="quiz.html">🧠 Quiz</a>
+      <a href="jeux_en.html">🎮 Games</a>
+      <a href="contact.html">📩 Contact</a>
+      <a href="login_en.html" class="login-btn">👤 Login</a>
+      <select id="langSelect" class="lang-select">
+        <option value="fr">🇫🇷 FR</option>
+        <option value="en" selected>🇬🇧 EN</option>
+        <option value="ar">🇹🇳 AR</option>
+      </select>
+    </nav>
+    <button class="menu-toggle" aria-label="Menu">☰</button>
+  </header>
+
+  <nav id="mobile-nav" class="mobile-nav">
+    <a href="indexSIGHT_en.html">🏠 Home</a>
+    <a href="livres_en.html">📖 School Books</a>
+    <a href="kissas_en.html">📖 Stories</a>
+    <a href="audio.html">🎧 Audio Books</a>
+    <a href="quiz.html">🧠 Quiz</a>
+    <a href="contact.html">📩 Contact</a>
+    <a href="login_en.html" class="login-btn">👤 Login</a>
+    <div class="lang-select-mobile">🌐
+      <select id="langSelectMobile">
+        <option value="fr">Français</option>
+        <option value="en" selected>English</option>
+        <option value="ar">العربية</option>
+      </select>
+    </div>
+  </nav>
+
+  <!-- ============ Page Hero ============ -->
+  <section class="page-hero">
+    <h2>📖 Stories & Tales</h2>
+    <p>Enchanted stories in 3 languages — read, listen and journey into magical worlds! 🌟</p>
+  </section>
+
+  <!-- ============ Filters ============ -->
+  <div class="filters-bar">
+    <span class="filter-label">Level:</span>
+    <button class="filter-btn active" onclick="filterStories('all', this)">All</button>
+    <button class="filter-btn" onclick="filterStories('1-2', this)">1st - 2nd</button>
+    <button class="filter-btn" onclick="filterStories('3-4', this)">3rd - 4th</button>
+    <button class="filter-btn" onclick="filterStories('5-6', this)">5th - 6th</button>
+    <div class="filter-divider"></div>
+    <span class="filter-label">Language:</span>
+    <button class="filter-btn" onclick="filterLang('fr', this)">FR</button>
+    <button class="filter-btn" onclick="filterLang('ar', this)">AR</button>
+    <button class="filter-btn" onclick="filterLang('en', this)">EN</button>
+  </div>
+
+  <!-- ============ Stories ============ -->
+  <div class="stories-container">
+    <h3 id="storiesTitle">✨ All Stories</h3>
+    <div class="stories-grid" id="storiesGrid"></div>
+  </div>
+
+  <!-- ============ Reader Modal ============ -->
+  <div id="storyModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h4 id="modalStoryTitle">Titre de l'histoire</h4>
+        <button class="modal-close" onclick="closeStoryModal()">✕</button>
+      </div>
+      <div class="modal-lang-tabs">
+        <button class="modal-lang-tab" onclick="switchLang('fr', this)">🇫🇷 Français</button>
+        <button class="modal-lang-tab" onclick="switchLang('ar', this)">🇹🇳 العربية</button>
+        <button class="modal-lang-tab active" onclick="switchLang('en', this)">🇬🇧 English</button>
+      </div>
+      <div class="reader-progress-wrap">
+        <div class="reader-progress-track"><div class="reader-progress-fill" id="readerProgressFill"></div></div>
+        <div class="reader-page-counter" id="readerPageCounter">Page 1 / 1</div>
+      </div>
+      <div class="modal-story-content">
+        <div id="text-fr" class="story-text active reader-page-stage"></div>
+        <div id="text-ar" class="story-text rtl-text reader-page-stage"></div>
+        <div id="text-en" class="story-text reader-page-stage"></div>
+      </div>
+      <div class="reader-nav">
+        <button class="reader-nav-btn" id="readerPrevBtn" onclick="readerGoPrev()">◀ <span class="btn-label">Previous</span></button>
+        <div class="reader-dots" id="readerDots"></div>
+        <button class="reader-nav-btn" id="readerNextBtn" onclick="readerGoNext()"><span class="btn-label">Next</span> ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ Footer ============ -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>🌟 LumiLearn</h4>
+        <p>An educational platform to help children learn while having fun.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Site Map</h4>
+        <ul>
+          <li><a href="indexSIGHT_en.html">🏠 Home</a></li>
+          <li><a href="livres_en.html">📖 School Books</a></li>
+          <li><a href="kissas_en.html">📖 Stories</a></li>
+          <li><a href="audio.html">🎧 Audio Books</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="quiz.html">🧠 Quiz</a></li>
+          <li><a href="jeux_en.html">🎮 Games</a></li>
+          <li><a href="apropos.html">💡 About</a></li>
+          <li><a href="contact.html">📩 Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Languages</h4>
+        <ul>
+          <li>🇫🇷 Français</li>
+          <li>🇬🇧 English</li>
+          <li>🇹🇳 العربية</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 LumiLearn | IEEE ENSIT CS × SIGHT Group Project 🌟</p>
+    </div>
+  </footer>
+
+  <!-- ============ JavaScript ============ -->
+  <script>
+    // ===== DATA =====
+    // TODO: remplacer par → await supabase.from('kissas').select('*')
+    async function getStories() {
+      return [
+        {
+          id: 1,
+          title: 'Le Petit Chaperon Rouge',
+          titleAr: 'ذات الرداء الأحمر',
+          titleEn: 'Little Red Riding Hood',
+          icon: '🐺',
+          cover: 'c-pink',
+          level: '1-2',
+          langs: ['fr', 'ar', 'en'],
+          fr: `Il était une fois une petite fille que tout le monde appelait le Petit Chaperon Rouge, à cause de la jolie cape rouge qu'elle portait toujours, même pour dormir !
+
+Un matin, sa maman lui dit :
+— Va porter cette galette et ce petit pot de beurre à ta grand-mère qui est malade. Mais ne t'arrête pas en chemin, et ne parle à personne !
+
+La petite fille traversa la grande forêt en chantant et en cueillant des fleurs. Les oiseaux chantaient dans les arbres. Soudain, un grand loup gris lui apparut entre les branches.
+
+— Bonjour, petite fille. Où vas-tu donc, toute seule ?
+— Je vais chez ma grand-mère, qui habite la petite maison de l'autre côté de la forêt.
+
+Le loup, qui avait très faim, eut une vilaine idée. Il courut par le chemin le plus court, arriva le premier chez la grand-mère, et la dévora tout entière ! Puis il mit son bonnet de nuit, se glissa dans son lit, et attendit en souriant méchamment...
+
+Quand le Petit Chaperon Rouge entra dans la maison, elle remarqua quelque chose d'étrange.
+— Grand-mère, comme vous avez de grandes oreilles !
+— C'est pour mieux t'entendre, mon enfant.
+— Grand-mère, comme vous avez de grands yeux !
+— C'est pour mieux te voir, mon enfant.
+— Grand-mère, comme vous avez de grandes dents !
+— C'est pour mieux te manger ! 🐺
+
+Heureusement, un chasseur qui passait par là entendit du bruit. Il entra vite, et avec son couteau, il libéra la grand-mère et sauva le Petit Chaperon Rouge juste à temps !
+
+Depuis ce jour, la petite fille n'oublia jamais d'être prudente dans la forêt, et elle n'écouta plus jamais les inconnus qui lui parlaient. 🌳❤️`,
+          ar: `كان يا ما كان، طفلة صغيرة جميلة كان الجميع يناديها "ذات الرداء الأحمر" بسبب العباءة الحمراء الجميلة التي كانت ترتديها دائماً، حتى عند النوم!
+
+في صباح أحد الأيام، قالت لها أمها:
+— اذهبي بهذه الكعكة وإناء الزبدة الصغير إلى جدّتك المريضة. ولا تتوقفي في الطريق، ولا تتحدثي مع أي شخص غريب!
+
+عبرت الطفلة الصغيرة الغابة الكبيرة وهي تغني وتجمع الأزهار. كانت العصافير تغني على الأشجار. فجأة، ظهر لها ذئب كبير رمادي من بين الأغصان.
+
+— صباح الخير يا صغيرتي. إلى أين أنتِ ذاهبة بمفردك؟
+— أذهب إلى بيت جدّتي الصغير في الجهة الأخرى من الغابة.
+
+كان الذئب جائعاً جداً، فخطرت له فكرة شريرة. ركض من الطريق الأقصر، ووصل أولاً إلى بيت الجدّة، وابتلعها كاملةً! ثم ارتدى قبعة نومها واستلقى في سريرها، وانتظر وهو يبتسم بخبث...
+
+حين دخلت ذات الرداء الأحمر إلى البيت، لاحظت شيئاً غريباً.
+— جدّتي، ما أكبر أذنيكِ!
+— لأسمعكِ بشكل أفضل يا حبيبتي.
+— جدّتي، ما أكبر عينيكِ!
+— لأراكِ بشكل أفضل يا حبيبتي.
+— جدّتي، ما أكبر أسنانكِ!
+— لآكلكِ! 🐺
+
+لحسن الحظ، كان صياد يمرّ من هناك وسمع الضجيج. دخل بسرعة، وبسكّينه حرّر الجدّة وأنقذ ذات الرداء الأحمر في اللحظة المناسبة!
+
+منذ ذلك اليوم، لم تنسَ الطفلة أبداً أن تكون حذرة في الغابة، ولم تتحدث بعد ذلك مع الغرباء الذين يخاطبونها. 🌳❤️`,
+          en: `Once upon a time, there was a little girl whom everyone called Little Red Riding Hood, because of the pretty red cape she always wore — even when she slept!
+
+One morning, her mother said to her:
+— Go take this cake and small pot of butter to your grandmother, who is sick. But don't stop along the way, and don't talk to strangers!
+
+The little girl walked through the big forest, singing happily and picking flowers. Birds were singing in the trees. Suddenly, a big grey wolf appeared between the branches.
+
+— Good morning, little girl. Where are you going all alone?
+— I'm going to my grandmother's little house, on the other side of the forest.
+
+The wolf, who was very hungry, had a wicked idea. He ran down the shortest path, arrived first at the grandmother's house, and swallowed her whole! Then he put on her nightcap, lay down in her bed, and waited, smiling wickedly...
+
+When Little Red Riding Hood entered the house, she noticed something strange.
+— Grandmother, what big ears you have!
+— All the better to hear you with, my dear.
+— Grandmother, what big eyes you have!
+— All the better to see you with, my dear.
+— Grandmother, what big teeth you have!
+— All the better to eat you with! 🐺
+
+Luckily, a hunter who was passing by heard the noise. He rushed in, and with his knife, freed the grandmother and saved Little Red Riding Hood just in time!
+
+From that day on, the little girl never forgot to be careful in the forest, and she never spoke to strangers again. 🌳❤️`
+        },
+        {
+          id: 2,
+          title: 'Cendrillon',
+          titleAr: 'سندريلا',
+          titleEn: 'Cinderella',
+          icon: '👠',
+          cover: 'c-blue',
+          level: '1-2',
+          langs: ['fr', 'ar', 'en'],
+          fr: `Il était une fois une jeune fille douce et belle, prénommée Cendrillon. Elle vivait avec sa méchante belle-mère et ses deux sœurs jalouses, qui la forçaient à faire tout le travail de la maison, du matin jusqu'au soir.
+
+Un jour, une invitation arriva au château : le prince organisait un grand bal pour trouver une épouse !
+
+Les sœurs de Cendrillon se préparèrent avec joie, essayant de jolies robes et des bijoux brillants. Mais elles lui interdirent d'y aller. Cendrillon resta seule dans la cuisine et se mit à pleurer.
+
+Soudain, sa bonne fée apparut dans un nuage d'étincelles, avec sa baguette magique ✨
+— Ne pleure pas, mon enfant. Tu iras au bal !
+
+La fée transforma une grosse citrouille en magnifique carrosse doré, six petites souris en six chevaux blancs, et les vieux haillons de Cendrillon en une robe splendide, bleue comme le ciel. Elle lui offrit aussi deux délicates pantoufles de verre qui brillaient comme des diamants.
+
+— Tu dois rentrer avant minuit, sinon la magie disparaîtra ! avertit la fée.
+
+Au bal, le prince ne vit que Cendrillon. Ils dansèrent toute la soirée, sous les lumières des grands lustres. Mais à minuit moins une, l'horloge commença à sonner ! Cendrillon s'enfuit en courant, et perdit une de ses pantoufles de verre sur les marches du château...
+
+Le prince chercha dans tout le royaume la jeune fille dont le petit pied chausserait parfaitement la pantoufle. Quand il arriva enfin chez Cendrillon et qu'elle l'essaya — elle lui allait à merveille !
+
+Le prince épousa Cendrillon dans un magnifique château, et ils vécurent heureux pour toujours. 👑💙`,
+          ar: `كان يا ما كان، فتاة طيبة وجميلة اسمها سندريلا. كانت تعيش مع زوجة أبيها القاسية وأختيها الحسودتين، اللتين كانتا تجبرانها على القيام بكل أعمال المنزل، من الصباح حتى المساء.
+
+ذات يوم، وصلت دعوة إلى القصر: الأمير ينظّم حفلاً راقصاً كبيراً ليجد عروساً!
+
+استعدّت أختا سندريلا بفرح، وجرّبتا فساتين جميلة ومجوهرات لامعة. لكنهما منعتاها من الذهاب. بقيت سندريلا وحيدة في المطبخ وبدأت تبكي.
+
+فجأة، ظهرت جنّيتها الطيبة في سحابة من الشرر، مع عصاها السحرية ✨
+— لا تبكي يا صغيرتي. ستذهبين إلى الحفل!
+
+حوّلت الجنية قرعة كبيرة إلى عربة ذهبية رائعة، وستة فئران صغيرة إلى ستة خيول بيضاء، وملابس سندريلا الرثّة إلى فستان فاتن أزرق كالسماء. وأهدتها أيضاً حذاءين من الزجاج الرقيق يلمعان كالألماس.
+
+— يجب أن تعودي قبل منتصف الليل، وإلا سينتهي السحر! حذّرتها الجنية.
+
+في الحفل، لم ير الأمير سوى سندريلا. رقصا طوال السهرة، تحت أنوار الثريات الكبيرة. لكن قبل منتصف الليل بدقيقة، بدأت الساعة تدقّ! هربت سندريلا راكضة، وفقدت إحدى حذاءيها الزجاجيين على درج القصر...
+
+بحث الأمير في كل المملكة عن الفتاة التي يناسب قدمها الصغير الحذاء تماماً. حين وصل أخيراً إلى سندريلا وجرّبته — ناسبها بشكل رائع!
+
+تزوّج الأمير من سندريلا في قصر رائع، وعاشا في سعادة للأبد. 👑💙`,
+          en: `Once upon a time, there was a kind and beautiful girl named Cinderella. She lived with her wicked stepmother and two jealous stepsisters, who forced her to do all the housework, from morning until night.
+
+One day, an invitation arrived at the castle: the prince was hosting a grand ball to find a wife!
+
+Cinderella's stepsisters got ready with joy, trying on pretty dresses and sparkling jewelry. But they forbade her from going. Cinderella stayed alone in the kitchen and began to cry.
+
+Suddenly, her fairy godmother appeared in a cloud of sparkles, with her magic wand ✨
+— Don't cry, my child. You shall go to the ball!
+
+The fairy turned a big pumpkin into a magnificent golden carriage, six little mice into six white horses, and Cinderella's old rags into a splendid dress, blue as the sky. She also gave her two delicate glass slippers that shone like diamonds.
+
+— You must return before midnight, or the magic will disappear! the fairy warned.
+
+At the ball, the prince only saw Cinderella. They danced all evening, under the lights of the great chandeliers. But just before midnight, the clock began to strike! Cinderella ran away, and lost one of her glass slippers on the castle steps...
+
+The prince searched throughout the kingdom for the girl whose small foot would fit the slipper perfectly. When he finally arrived at Cinderella's home and she tried it on — it fit wonderfully!
+
+The prince married Cinderella in a magnificent castle, and they lived happily ever after. 👑💙`
+        },
+        {
+          id: 3,
+          title: 'Les Trois Petits Cochons',
+          titleAr: 'الخنازير الثلاثة الصغيرة',
+          titleEn: 'The Three Little Pigs',
+          icon: '🐷',
+          cover: 'c-yellow',
+          level: '1-2',
+          langs: ['fr', 'ar', 'en'],
+          fr: `Il était une fois trois petits cochons qui quittèrent la maison de leur maman pour construire chacun la leur, bien décidés à devenir grands.
+
+Le premier petit cochon, très pressé de jouer, construisit une maison en paille — vite fait, bien fait, pensait-il !
+Le second, un peu plus sérieux, construisit une maison en bois.
+Le troisième, le plus sage et le plus travailleur, prit son temps et construisit une maison en briques rouges, solide et résistante.
+
+Un grand loup méchant, qui avait très faim, arriva devant la maison de paille et souffla très fort :
+— Je vais souffler, souffler, et ta maison démolir ! 💨
+
+La maison s'envola en mille morceaux ! Le premier cochon courut de toutes ses forces chez son frère, dans la maison en bois. Le loup les suivit et souffla encore plus fort — et la maison en bois s'écroula aussi !
+
+Les deux cochons, terrifiés, coururent chez leur frère, dans la maison en briques. Le loup souffla, souffla, souffla de toutes ses forces... mais la solide maison ne bougea pas d'un centimètre !
+
+Furieux, le loup essaya de descendre par la cheminée. Mais les trois cochons, malins, avaient allumé un grand feu juste en dessous. Le loup se brûla les fesses et s'enfuit en hurlant dans la forêt, et on ne le revit plus jamais.
+
+Les trois petits cochons, devenus très bons amis, vécurent heureux et en sécurité dans leur belle maison en briques. 🐷🏠❤️`,
+          ar: `كان يا ما كان، ثلاثة خنازير صغيرة غادرت بيت أمها لتبني كلّ واحدة بيتاً لها، وكانت مصمّمة على أن تكبر.
+
+الخنزير الأول، المتعجّل جداً للّعب، بنى بيتاً من القشّ — سريع وسهل، كما ظنّ!
+الثاني، الأكثر جديّة قليلاً، بنى بيتاً من الخشب.
+أما الثالث، الأحكم والأكثر اجتهاداً، فأخذ وقته وبنى بيتاً من الطوب الأحمر، متيناً وصلباً.
+
+جاء ذئب كبير شرير، كان جائعاً جداً، إلى بيت القشّ ونفخ بقوة:
+— سأنفخ وسأنفخ حتى أهدم بيتك! 💨
+
+طار البيت إلى ألف قطعة! ركض الخنزير الأول بكل قوته إلى أخيه في بيت الخشب. تبعهما الذئب ونفخ بقوة أكبر — وانهار بيت الخشب أيضاً!
+
+ركض الخنزيران المرعوبان إلى أخيهما في بيت الطوب. نفخ الذئب وبنفخ بكل قوته... لكن البيت المتين لم يتحرك ولا سنتيمتراً واحداً!
+
+غاضباً، حاول الذئب النزول من المدخنة. لكن الخنازير الثلاثة الذكية كانوا قد أشعلوا ناراً كبيرة تحتها مباشرة. احترق مؤخرة الذئب وفرّ مولولاً إلى الغابة، ولم يُرَ بعدها أبداً.
+
+عاش الخنازير الثلاثة الصغيرة، الذين أصبحوا أصدقاء حقيقيين، سعداء وآمنين في بيتهم الجميل من الطوب. 🐷🏠❤️`,
+          en: `Once upon a time, three little pigs left their mother's house to each build their own home, determined to grow up strong.
+
+The first little pig, in a hurry to go play, built a house of straw — quick and easy, he thought!
+The second, a little more careful, built a house of wood.
+The third, the wisest and hardest-working, took his time and built a house of red bricks, strong and sturdy.
+
+A big bad wolf, who was very hungry, arrived at the straw house and huffed with all his might:
+— I'll huff and I'll puff and I'll blow your house down! 💨
+
+The house flew away into a thousand pieces! The first pig ran as fast as he could to his brother's wooden house. The wolf followed and huffed even harder — and the wooden house collapsed too!
+
+The two terrified pigs ran to their brother's brick house. The wolf huffed and puffed with all his might... but the sturdy house didn't move an inch!
+
+Furious, the wolf tried to come down the chimney. But the three clever pigs had lit a big fire right below it. The wolf burned his bottom and ran away howling into the forest, and was never seen again.
+
+The three little pigs, now true best friends, lived happily and safely in their lovely brick house. 🐷🏠❤️`
+        },
+        {
+          id: 4,
+          title: 'Aladin et la Lampe Merveilleuse',
+          titleAr: 'علاء الدين والمصباح السحري',
+          titleEn: 'Aladdin and the Magic Lamp',
+          icon: '🪔',
+          cover: 'c-purple',
+          level: '3-4',
+          langs: ['fr', 'ar', 'en'],
+          fr: `Il était une fois, dans une lointaine cité de Perse aux marchés colorés et aux minarets dorés, un jeune garçon nommé Aladin. Orphelin de père, il vivait pauvrement avec sa mère, gagnant quelques pièces en rendant de petits services dans les ruelles.
+
+Un jour, un homme se présenta à lui, vêtu de riches habits sombres. Il se disait son oncle, mais c'était en réalité un puissant et malfaisant magicien venu du Maghreb, à la recherche d'un trésor légendaire qu'il ne pouvait atteindre seul.
+
+Il conduisit Aladin jusqu'à une grotte secrète, cachée sous le sable du désert, et lui ordonna de descendre chercher une vieille lampe poussiéreuse, parmi des montagnes d'or, de perles et de pierres précieuses.
+— Ne touche à rien d'autre que la lampe ! gronda le magicien.
+
+Mais lorsque Aladin remonta avec la lampe et un anneau magique trouvé en chemin, le magicien, furieux qu'il refuse de la lui donner avant de sortir, scella l'entrée de la grotte, abandonnant le garçon dans l'obscurité.
+
+Désespéré, Aladin frotta sans le vouloir l'anneau qu'il portait au doigt. Dans un nuage de fumée, un génie apparut !
+— Que désires-tu, maître ? Je suis le génie de l'anneau.
+
+Le génie le ramena chez lui sain et sauf. Plus tard, en nettoyant la vieille lampe poussiéreuse, Aladin découvrit qu'elle aussi abritait un génie — bien plus puissant encore !
+— Je suis le génie de la lampe. Tes désirs sont des ordres, maître !
+
+Grâce à ses deux génies, Aladin obtint des habits somptueux, un palais aux murs de marbre et d'or, et devint l'ami du sultan. Il tomba profondément amoureux de la princesse Jasmine, douce et intelligente, et l'épousa avec la bénédiction du sultan.
+
+Mais le magicien, apprenant qu'Aladin avait survécu et prospéré, revint déguisé en marchand. Il échangea la lampe magique contre de la vaisselle neuve, trompant la princesse qui ne connaissait pas sa valeur, puis s'en servit pour transporter le palais entier, avec Jasmine à l'intérieur, jusqu'en Afrique !
+
+Aladin, grâce à l'anneau resté à son doigt, retrouva sa trace. Avec courage et ruse, il versa un somnifère dans la coupe du magicien lors d'un repas, récupéra la lampe pendant son sommeil, et le bannit pour toujours dans les sables du désert.
+
+Le sultan, admirant la bravoure et le bon cœur d'Aladin, le nomma son successeur. Aladin et Jasmine régnèrent ensemble avec sagesse, entourés de magie, de richesse et d'un amour sincère. 🪔✨👑`,
+          ar: `كان يا ما كان، في مدينة فارسية بعيدة بأسواقها الملوّنة ومنارات مساجدها الذهبية، شاب اسمه علاء الدين. كان يتيم الأب، يعيش بفقر مع والدته، يكسب بعض القروش بتقديم خدمات صغيرة في الأزقة.
+
+ذات يوم، تقدّم منه رجل يرتدي ثياباً فاخرة داكنة. قال أنه عمّه، لكنه في الحقيقة كان ساحراً شريراً وقوياً قادماً من المغرب، يبحث عن كنز أسطوري لا يستطيع الوصول إليه بمفرده.
+
+قاد الساحر علاء الدين إلى كهف سرّي مخفي تحت رمال الصحراء، وأمره بالنزول للبحث عن مصباح قديم مغبّر، بين جبال من الذهب واللؤلؤ والأحجار الكريمة.
+— لا تلمس شيئاً سوى المصباح! زجره الساحر.
+
+لكن حين عاد علاء الدين بالمصباح وبخاتم سحري وجده في طريقه، غضب الساحر لأنه رفض تسليمه المصباح قبل الخروج، فأغلق مدخل الكهف، تاركاً الفتى في الظلام.
+
+في يأسه، فرك علاء الدين بدون قصد الخاتم الذي كان في إصبعه. في سحابة من الدخان، ظهر جنّي!
+— ماذا تريد يا سيدي؟ أنا جنّي الخاتم.
+
+أعاده الجنّي إلى بيته سالماً. وبعد ذلك، أثناء تنظيف المصباح القديم المغبّر، اكتشف علاء الدين أنه أيضاً يحوي جنّياً — أقوى بكثير!
+— أنا جنّي المصباح. أوامرك مسموعة يا سيدي!
+
+بفضل جنّييه، حصل علاء الدين على ملابس فاخرة، وقصر بجدران من المرمر والذهب، وصار صديقاً للسلطان. وقع في حب الأميرة ياسمين، اللطيفة والذكية، وتزوّجها بمباركة السلطان.
+
+لكن الساحر، حين علم أن علاء الدين نجا وازدهر، عاد متنكّراً في هيئة تاجر. بادل المصباح السحري بأدوات مائدة جديدة، خادعاً الأميرة التي لم تكن تعرف قيمته، ثم استخدمه لنقل القصر بأكمله، وياسمين بداخله، إلى أفريقيا!
+
+علاء الدين، بفضل الخاتم الذي بقي في إصبعه، تتبّع أثره. بشجاعة وذكاء، وضع منوّماً في كأس الساحر خلال وجبة، استرجع المصباح وهو نائم، ونفاه إلى الأبد في رمال الصحراء.
+
+السلطان، معجباً بشجاعة علاء الدين وطيبة قلبه، عيّنه خليفته. حكم علاء الدين وياسمين معاً بحكمة، محاطَين بالسحر والثروة وحب صادق. 🪔✨👑`,
+          en: `Once upon a time, in a faraway Persian city with colorful markets and golden minarets, there lived a young boy named Aladdin. Having lost his father, he lived poorly with his mother, earning a few coins by running small errands in the alleys.
+
+One day, a man approached him, dressed in rich, dark robes. He claimed to be Aladdin's uncle, but he was actually a powerful and evil magician from the Maghreb, searching for a legendary treasure he could not reach alone.
+
+He led Aladdin to a secret cave hidden beneath the desert sand, and ordered him to climb down and fetch an old dusty lamp, among mountains of gold, pearls, and precious stones.
+— Touch nothing but the lamp! the magician growled.
+
+But when Aladdin climbed back up with the lamp and a magic ring he had found along the way, the magician grew furious that he refused to hand over the lamp before climbing out, and sealed the cave's entrance, leaving the boy trapped in darkness.
+
+In despair, Aladdin accidentally rubbed the ring on his finger. In a cloud of smoke, a genie appeared!
+— What do you wish, master? I am the genie of the ring.
+
+The genie carried him safely home. Later, while cleaning the old dusty lamp, Aladdin discovered that it too held a genie — a far more powerful one!
+— I am the genie of the lamp. Your wish is my command, master!
+
+Thanks to his two genies, Aladdin obtained magnificent clothes, a palace with marble and gold walls, and became friends with the sultan. He fell deeply in love with Princess Jasmine, gentle and clever, and married her with the sultan's blessing.
+
+But the magician, learning that Aladdin had survived and prospered, returned disguised as a merchant. He traded the magic lamp for new dishes, tricking the princess who did not know its value, then used it to whisk away the entire palace, with Jasmine inside, all the way to Africa!
+
+Aladdin, thanks to the ring still on his finger, tracked him down. With courage and cunning, he slipped a sleeping potion into the magician's cup during a meal, recovered the lamp while he slept, and banished him forever into the desert sands.
+
+The sultan, admiring Aladdin's bravery and kind heart, named him his successor. Aladdin and Jasmine ruled together with wisdom, surrounded by magic, riches, and true love. 🪔✨👑`
+        },
+        {
+          id: 5,
+          title: 'Ali Baba et les 40 Voleurs',
+          titleAr: 'علي بابا والأربعون لصاً',
+          titleEn: 'Ali Baba and the Forty Thieves',
+          icon: '🏺',
+          cover: 'c-teal',
+          level: '3-4',
+          langs: ['fr', 'ar', 'en'],
+          fr: `Ali Baba était un pauvre bûcheron qui vivait dans une ville de Perse, gagnant chichement sa vie en coupant du bois dans la forêt voisine, avec son âne fidèle pour seul compagnon.
+
+Un jour, alors qu'il ramassait des fagots, il entendit un grand bruit de sabots. Caché derrière un buisson, il vit une troupe de quarante voleurs à cheval, menés par un chef redoutable, s'approcher d'un immense rocher.
+
+Leur chef leva les bras et cria d'une voix puissante :
+— Sésame, ouvre-toi !
+
+À ces mots, le rocher s'ouvrit en grondant, révélant une grotte secrète remplie jusqu'au plafond d'or, de soieries, de tapis précieux et de bijoux scintillants — le trésor amassé par les voleurs au fil des années.
+
+Après leur départ, le cœur battant, Ali Baba s'approcha à son tour et prononça les mots magiques. Il entra, émerveillé, remplit plusieurs sacs de pièces d'or, et rentra chez lui chargé de richesses.
+
+Son frère Cassim, plus riche mais terriblement cupide, apprit le secret en menaçant Ali Baba. Mais une fois dans la grotte, ébloui par tant de trésors, il oublia les mots magiques pour en sortir ! Les voleurs revenus le trouvèrent et le tuèrent sans pitié.
+
+Le chef des voleurs, découvrant qu'un autre homme connaissait leur secret, jura de se venger. Il se déguisa habilement en riche marchand d'huile et cacha trente-huit de ses hommes armés dans de grandes jarres de cuivre, prétendant vouloir loger chez Ali Baba pour la nuit.
+
+Mais la servante d'Ali Baba, la courageuse et observatrice Morgiane, remarqua quelque chose d'étrange en allant chercher de l'huile. Elle découvrit les hommes cachés ! Sans perdre un instant, elle fit bouillir une grande marmite d'huile et la versa, jarre après jarre, sur chacun des voleurs, les éliminant tous.
+
+Quand le faux marchand comprit que son plan avait échoué, il s'enfuit dans la nuit, mais Morgiane, toujours aussi vigilante, finit par le démasquer quelque temps plus tard.
+
+Ali Baba, infiniment reconnaissant envers Morgiane qui avait sauvé toute la famille, l'affranchit et la maria à son propre fils. Le trésor de la grotte servit à faire prospérer la famille pendant de longues générations. 🏺🌟`,
+          ar: `علي بابا كان حطّاباً فقيراً يعيش في مدينة فارسية، يكسب رزقه بصعوبة بقطع الحطب في الغابة المجاورة، وحماره الوفي رفيقه الوحيد.
+
+ذات يوم، وبينما كان يجمع حزم الحطب، سمع صوت حوافر قوياً. مختبئاً خلف شجيرة، رأى فرقة من أربعين لصاً على ظهور الخيل، يقودهم زعيم مرهوب، تقترب من صخرة ضخمة.
+
+رفع زعيمهم يديه وصرخ بصوت قوي:
+— افتح يا سمسم!
+
+عند هذه الكلمات، انفتحت الصخرة بهدير، كاشفةً عن كهف سرّي مليء حتى السقف بالذهب والحرير والسجاد الثمين والمجوهرات اللامعة — كنز جمعه اللصوص على مرّ السنين.
+
+بعد رحيلهم، وبقلب نابض، اقترب علي بابا بدوره ونطق بالكلمات السحرية. دخل، مندهشاً، وملأ عدة أكياس بقطع الذهب، وعاد إلى بيته محمّلاً بالثروات.
+
+أخوه قاسم، الأغنى لكنه طمّاع جداً، عرف السرّ بتهديد علي بابا. لكنه حين دخل الكهف، أعمته كثرة الكنوز، فنسي الكلمات السحرية للخروج! وجده اللصوص العائدون وقتلوه دون رحمة.
+
+زعيم اللصوص، حين اكتشف أن رجلاً آخر يعرف سرّهم، أقسم على الانتقام. تنكّر بمهارة في هيئة تاجر زيت غني وأخفى ثمانية وثلاثين من رجاله المسلّحين في جرار نحاسية كبيرة، متذرّعاً بأنه يريد المبيت عند علي بابا.
+
+لكن خادمة علي بابا، الشجاعة والمتنبّهة مرجانة، لاحظت شيئاً غريباً أثناء بحثها عن الزيت. اكتشفت الرجال المخفيين! دون أن تفقد لحظة، أغلت قِدراً كبيراً من الزيت وسكبته، جرّة تلو جرّة، على كل لصّ، فأنهت عليهم جميعاً.
+
+حين أدرك التاجر المزيّف أن خطته فشلت، فرّ في الليل، لكن مرجانة، الحذرة دائماً، كشفته بعد مدة قصيرة.
+
+علي بابا، شاكراً بلا حدود لمرجانة التي أنقذت العائلة كلها، أعتقها وزوّجها من ابنه. ساهم كنز الكهف في إثراء العائلة لأجيال طويلة. 🏺🌟`,
+          en: `Ali Baba was a poor woodcutter living in a Persian city, earning a meager living by cutting wood in the nearby forest, with his loyal donkey as his only companion.
+
+One day, while gathering bundles of wood, he heard a loud sound of hooves. Hidden behind a bush, he saw a band of forty thieves on horseback, led by a fearsome chief, approaching a massive rock.
+
+Their chief raised his arms and shouted in a powerful voice:
+— Open Sesame!
+
+At these words, the rock rumbled open, revealing a secret cave filled to the ceiling with gold, silks, precious carpets, and gleaming jewels — treasure the thieves had gathered over many years.
+
+After they left, his heart pounding, Ali Baba approached in turn and spoke the magic words. He went in, amazed, filled several sacks with gold coins, and returned home loaded with riches.
+
+His brother Cassim, richer but terribly greedy, learned the secret by threatening Ali Baba. But once inside the cave, dazzled by so much treasure, he forgot the magic words to get back out! The returning thieves found him and killed him without mercy.
+
+The chief of the thieves, discovering that another man knew their secret, swore revenge. He cleverly disguised himself as a wealthy oil merchant and hid thirty-eight of his armed men in large copper jars, claiming he wished to lodge with Ali Baba for the night.
+
+But Ali Baba's servant, the brave and watchful Morgiana, noticed something strange while fetching oil. She discovered the hidden men! Without losing a moment, she boiled a large pot of oil and poured it, jar by jar, onto each of the thieves, finishing them all off.
+
+When the fake merchant realized his plan had failed, he fled into the night, but Morgiana, ever vigilant, eventually unmasked him some time later.
+
+Ali Baba, endlessly grateful to Morgiana for saving the whole family, freed her and had her married to his own son. The treasure from the cave helped the family prosper for many generations to come. 🏺🌟`
+        },
+        {
+          id: 6,
+          title: 'Hansel et Gretel',
+          titleAr: 'هانسل وغريتل',
+          titleEn: 'Hansel and Gretel',
+          icon: '🏡',
+          cover: 'c-green',
+          level: '3-4',
+          langs: ['fr', 'ar', 'en'],
+          fr: `Hansel et Gretel étaient deux enfants qui vivaient à l'orée d'une grande forêt, avec leur père bûcheron et leur belle-mère, une femme dure dont le cœur s'était endurci par les temps de famine. Un hiver particulièrement difficile, alors que la nourriture manquait cruellement, la marâtre convainquit le père hésitant d'abandonner les enfants au plus profond de la forêt.
+
+Mais Hansel, qui avait entendu le plan derrière la porte, était rusé. Avant de partir, il avait rempli ses poches de petits cailloux blancs, brillants comme de la nacre sous la lumière. Pendant que ses parents les abandonnaient, il les sema discrètement sur le chemin. Le soir venu, grâce aux cailloux qui scintillaient sous la lune, les enfants retrouvèrent sans peine le chemin de leur maison.
+
+La marâtre, furieuse de les revoir, organisa une seconde tentative, en verrouillant cette fois la porte pour qu'Hansel ne puisse récolter de cailloux. Il n'eut qu'un morceau de pain à émietter sur le sentier. Mais des oiseaux affamés mangèrent toutes les miettes... et les enfants, perdus, errèrent pendant des jours dans la forêt sombre et silencieuse, affaiblis par la faim et la peur.
+
+Épuisés, ils découvrirent une étrange et merveilleuse maison faite de pain d'épices, de gâteaux sucrés et de bonbons multicolores, avec des fenêtres en sucre glacé. Affamés, ils se mirent à en grignoter des morceaux. Une vieille femme à l'apparence douce sortit alors et les invita gentiment à entrer se réchauffer et se nourrir.
+
+Mais cette femme était en réalité une terrible sorcière qui attirait les enfants perdus pour les engraisser et les manger ! Elle enferma immédiatement Hansel dans une cage en fer et le nourrissait chaque jour de mets riches, tandis qu'elle obligeait Gretel à faire tout le ménage de la maison enchantée.
+
+Chaque jour, la sorcière demandait à toucher le doigt d'Hansel pour vérifier s'il était assez gras. Le garçon, malin, lui tendait à la place un petit os de poulet, trompant la vieille sorcière à moitié aveugle pendant des semaines.
+
+Un jour, la sorcière, impatiente, décida de cuire Hansel sans plus attendre et demanda à Gretel de vérifier si le four était assez chaud. Gretel, devinant le piège, répondit qu'elle ne savait pas comment faire. Quand la sorcière se pencha elle-même pour montrer comment, Gretel, rassemblant tout son courage, la poussa d'un coup sec dans le four brûlant et referma la porte !
+
+Libérés enfin, les deux enfants explorèrent la maison de la sorcière et trouvèrent des coffres remplis de perles, de pierres précieuses et de pièces d'or. Ils remplirent leurs poches et leur tablier, puis reprirent le chemin de la maison.
+
+À leur arrivée, ils apprirent que la cruelle marâtre était morte pendant leur absence. Leur père, qui les avait pleurés chaque jour avec un immense remords, les accueillit en larmes de joie. Grâce au trésor de la sorcière, la petite famille ne connut plus jamais la faim, et ils vécurent désormais réunis, riches et heureux. 🏡🍬✨`,
+          ar: `هانسل وغريتل كانا طفلين يعيشان على حدود غابة كبيرة، مع أبيهما الحطّاب وزوجة أبيهما، امرأة قاسية تصلّب قلبها بسبب أيام المجاعة. في شتاء قاسٍ بشكل خاص، وحين شحّ الطعام بقسوة، أقنعت زوجة الأب الأب المتردّد بأن يتخلى عن الطفلين في أعمق نقطة من الغابة.
+
+لكن هانسل، الذي سمع الخطة من خلف الباب، كان ذكياً. قبل الرحيل، ملأ جيوبه بحصى صغيرة بيضاء، تلمع كالصدف تحت الضوء. وبينما كان والداه يتركانهما، نثرها بسرّية على الطريق. وعند المساء، وبفضل الحصى اللامعة تحت ضوء القمر، وجد الطفلان طريق العودة إلى بيتهما بسهولة.
+
+غضبت زوجة الأب لرؤيتهما من جديد، فدبّرت محاولة ثانية، مغلقةً الباب هذه المرة كي لا يجمع هانسل الحصى. لم يكن معه سوى قطعة خبز لينثرها على الممر. لكن عصافير جائعة أكلت كل الفتات... وضاع الطفلان، تائهين لأيام في الغابة المظلمة الصامتة، ضعيفين من الجوع والخوف.
+
+منهكين، وجدا بيتاً غريباً وعجيباً مصنوعاً من خبز الزنجبيل والكعك الحلو والحلوى متعددة الألوان، بنوافذ من السكّر المثلّج. جائعين، بدآ يقرضمان قطعاً منه. خرجت امرأة عجوز تبدو لطيفة ودعتهما بلطف للدخول للتدفئة والأكل.
+
+لكن هذه المرأة كانت في الحقيقة ساحرة مرعبة تجذب الأطفال التائهين لتسمّنهم وتأكلهم! حبست هانسل فوراً في قفص من الحديد وكانت تغذّيه كل يوم بأطعمة غنية، بينما أجبرت غريتل على القيام بكل أعمال البيت المسحور.
+
+كل يوم، كانت الساحرة تطلب لمس إصبع هانسل لتتحقق إن كان سميناً بما يكفي. الفتى الذكي كان يمدّ لها عظمة دجاجة صغيرة بدلاً من إصبعه، خادعاً الساحرة العجوز نصف العمياء لأسابيع.
+
+ذات يوم، قرّرت الساحرة، غير الصبورة، أن تطبخ هانسل دون مزيد من الانتظار وطلبت من غريتل أن تتحقق إن كان الفرن ساخناً بما يكفي. غريتل، التي خمّنت الفخ، أجابت أنها لا تعرف كيف تفعل ذلك. وحين انحنت الساحرة نفسها لتوضّح، جمعت غريتل كل شجاعتها ودفعتها بقوة داخل الفرن المحترق وأغلقت الباب!
+
+أحراراً أخيراً، استكشف الطفلان بيت الساحرة ووجدا صناديق مليئة باللآلئ والأحجار الكريمة وقطع الذهب. ملأا جيوبهما ومريولهما، ثم عادا في طريقهما إلى البيت.
+
+عند وصولهما، علما أن زوجة الأب القاسية ماتت أثناء غيابهما. أبوهما، الذي كان يبكيهما كل يوم بندم عميق، استقبلهما بدموع الفرح. وبفضل كنز الساحرة، لم تعرف العائلة الصغيرة الجوع مرة أخرى، وعاشوا من الآن متّحدين، أغنياء وسعداء. 🏡🍬✨`,
+          en: `Hansel and Gretel were two children who lived at the edge of a great forest, with their woodcutter father and their stepmother, a harsh woman whose heart had hardened through years of famine. One particularly difficult winter, when food was cruelly scarce, the stepmother convinced the hesitant father to abandon the children deep in the forest.
+
+But Hansel, who had overheard the plan through the door, was clever. Before leaving, he filled his pockets with small white pebbles, shining like pearls in the light. As his parents left them behind, he quietly scattered the pebbles along the path. When evening came, thanks to the pebbles glinting under the moonlight, the children easily found their way back home.
+
+Furious to see them again, the stepmother arranged a second attempt, this time locking the door so Hansel couldn't gather pebbles. He had only a piece of bread to crumble along the trail. But hungry birds ate every last crumb... and the children, lost, wandered for days through the dark, silent forest, weakened by hunger and fear.
+
+Exhausted, they discovered a strange and wonderful house made of gingerbread, sweet cakes, and colorful candy, with windows of frosted sugar. Starving, they began nibbling pieces off it. A gentle-looking old woman came out and kindly invited them in to warm up and eat.
+
+But this woman was actually a terrible witch who lured lost children in order to fatten them up and eat them! She immediately locked Hansel in an iron cage and fed him rich food every day, while forcing Gretel to do all the housework in the enchanted house.
+
+Each day, the witch asked to touch Hansel's finger to check if he was fat enough. The clever boy held out a small chicken bone instead, fooling the half-blind old witch for weeks.
+
+One day, the impatient witch decided to cook Hansel without further delay and asked Gretel to check whether the oven was hot enough. Gretel, sensing the trap, claimed she didn't know how. When the witch leaned in herself to demonstrate, Gretel gathered all her courage and shoved her hard into the blazing oven, slamming the door shut!
+
+Free at last, the two children explored the witch's house and found chests full of pearls, precious stones, and gold coins. They filled their pockets and apron, then set off for home.
+
+When they arrived, they learned that the cruel stepmother had died while they were gone. Their father, who had mourned them every day with deep regret, welcomed them with tears of joy. Thanks to the witch's treasure, the small family never went hungry again, and they lived from then on reunited, rich, and happy. 🏡🍬✨`
+        },
+        {
+          id: 7,
+          title: 'Les Mille et Une Nuits',
+          titleAr: 'ألف ليلة وليلة',
+          titleEn: 'One Thousand and One Nights',
+          icon: '🌙',
+          cover: 'c-rose',
+          level: '5-6',
+          langs: ['fr', 'ar', 'en'],
+          fr: `Il était une fois, dans le royaume de Perse, un puissant roi nommé Shahryar, réputé pour sa justice autant que pour la violence de ses colères. Trahi un jour par sa propre femme, il sombra dans une fureur si noire qu'il jura de ne plus jamais faire confiance à aucune femme. Dans sa douleur devenue cruauté, il décida d'épouser une nouvelle femme chaque nuit et de la faire exécuter au matin suivant, avant qu'elle ne puisse, selon lui, le trahir à son tour.
+
+Pendant trois années, ce destin tragique frappa les filles du royaume, l'une après l'autre, jetant tout le pays dans la terreur et le chagrin. Les familles cachaient leurs filles, et le grand vizir, chargé de trouver chaque nuit une nouvelle épouse, se désespérait de devoir sacrifier ainsi tant de jeunes vies innocentes.
+
+C'est alors que Schéhérazade, la fille aînée du vizir, sage, érudite et d'un courage immense, prit une décision qui bouleversa son père : elle se porta volontaire pour devenir l'épouse du roi cette nuit même, malgré le sort funeste qui l'attendait.
+
+— Je connais un remède à sa cruauté, dit-elle à son père effondré. Fais-moi confiance.
+
+La première nuit, après les noces, alors que l'aube approchait et que le roi s'apprêtait déjà à signer l'arrêt de sa mort, Schéhérazade demanda une dernière faveur : raconter une histoire à sa jeune sœur Dinarzade, qu'elle avait fait dissimuler sous le lit pour cette occasion précise.
+
+Elle commença un récit si captivant, peuplé de djinns, de marchands rusés et de royaumes enchantés, que le roi, malgré lui, se mit à écouter avec une attention grandissante. Mais au moment le plus palpitant, alors que le soleil se levait, Schéhérazade s'arrêta net.
+— Hélas, dit-elle, le jour se lève et je dois me taire.
+
+Dévoré de curiosité, le roi, pour la première fois depuis trois ans, repoussa l'exécution d'un jour entier, simplement pour connaître la suite de l'histoire.
+
+Et ainsi commença un prodigieux jeu de patience qui allait durer mille et une nuits. Nuit après nuit, Schéhérazade tissa avec un art consommé des récits enchanteurs et sans fin : les voyages extraordinaires de Sinbad le marin, la lampe magique d'Aladin, la grotte au trésor d'Ali Baba et des quarante voleurs, des histoires de princes transformés en statues, de djinns enfermés dans des bouteilles, de tapis volants et de villes englouties — chaque conte s'achevant toujours sur un mystère, une question en suspens, qui forçait le roi à attendre la nuit suivante.
+
+Au fil des mois, quelque chose changea profondément en Shahryar. Les histoires de Schéhérazade, riches de sagesse, de justice et de compassion, ouvrirent peu à peu son cœur endurci. Il découvrit, à travers les héros de ces récits, des qualités qu'il avait oubliées : la loyauté, le pardon, l'amour véritable, et la valeur inestimable de chaque vie humaine. Il en vint même à respecter et à admirer profondément l'intelligence et le courage de cette femme qui, nuit après nuit, tenait sa propre vie entre ses mains et celles de ses mots.
+
+Pendant mille et une nuits, ses récits magiques maintinrent le roi sous un charme bien plus puissant que n'importe quelle magie : celui de l'histoire bien racontée. Il oublia sa cruauté passée, gouverna désormais avec sagesse et bonté, et apprit que les mots, bien plus que la peur, pouvaient transformer un cœur.
+
+À l'aube de la mille-et-unième nuit, le roi, les yeux remplis d'une émotion qu'il n'avait pas connue depuis des années, déclara devant toute la cour :
+
+— Schéhérazade, tu m'as enseigné ce que j'avais oublié depuis si longtemps : la valeur de la vie, le pouvoir du pardon, et la puissance infinie des mots et des histoires.
+
+Il l'épousa alors pour de vrai, non plus par peur ou par vengeance, mais par amour véritable et admiration sincère. Ensemble, ils régnèrent avec sagesse sur le royaume, et leurs trois enfants grandirent en écoutant, chaque soir, les histoires merveilleuses que leur mère continuait de raconter, désormais simplement pour le plaisir et la beauté des mots. 🌙📖✨`,
+          ar: `كان يا ما كان، في مملكة فارس، ملك قوي يُدعى شهريار، معروف بعدله مثلما هو معروف بشدة غضبه. خانته زوجته ذات يوم، فغرق في غضب أسود لدرجة أنه أقسم ألا يثق بامرأة بعد الآن. وفي ألمه الذي تحوّل إلى قسوة، قرر أن يتزوج امرأة جديدة كل ليلة ويأمر بقتلها في الصباح التالي، قبل أن تتمكن، بحسب ظنّه، من خيانته بدورها.
+
+لمدة ثلاث سنوات، أصاب هذا المصير المأساوي بنات المملكة، واحدة تلو الأخرى، فألقى الرعب والحزن على كل البلاد. كانت العائلات تخفي بناتها، وكان الوزير الأكبر، المكلّف بإيجاد عروس جديدة كل ليلة، يائساً من الاضطرار إلى التضحية بحياة فتيات بريئات كثيرات.
+
+وهنا قررت شهرزاد، ابنة الوزير الكبرى، الحكيمة والمتعلمة وذات الشجاعة الهائلة، قراراً هزّ والدها: تطوّعت لتصبح زوجة الملك في تلك الليلة نفسها، رغم المصير القاسي الذي كان يتربّص بها.
+
+— أعرف علاجاً لقسوته، قالت لوالدها المنهار. ثق بي.
+
+في الليلة الأولى، بعد الزفاف، وحين اقترب الفجر وكان الملك على وشك توقيع حكم موتها، طلبت شهرزاد معروفاً أخيراً: أن تحكي قصة لأختها الصغيرة دنيازاد، التي أخفتها تحت السرير لهذه المناسبة بالضبط.
+
+بدأت حكاية آسرة جداً، مليئة بالجن والتجار الأذكياء والممالك المسحورة، حتى أن الملك، رغماً عنه، بدأ يستمع باهتمام متزايد. لكن في أكثر اللحظات تشويقاً، حين بدأت الشمس تشرق، توقفت شهرزاد فوراً.
+— واأسفي، قالت، حلّ النهار ويجب أن أصمت.
+
+وقد التهمه الفضول، أجّل الملك، للمرة الأولى منذ ثلاث سنوات، تنفيذ الإعدام يوماً كاملاً، فقط لمعرفة بقية الحكاية.
+
+وهكذا بدأت لعبة صبر عجيبة كان مقدّراً لها أن تدوم ألف ليلة وليلة. ليلة بعد ليلة، نسجت شهرزاد بفنّ متقن حكايات ساحرة لا تنتهي: رحلات السندباد البحري الاستثنائية، مصباح علاء الدين السحري، كهف كنز علي بابا والأربعين لصاً، حكايات أمراء تحوّلوا إلى تماثيل، وجن محبوسين في قناني، وبسط طائرة ومدن غارقة — كل حكاية تنتهي دائماً بلغز، بسؤال معلّق، يجبر الملك على الانتظار حتى الليلة التالية.
+
+مع مرور الشهور، تغيّر شيء ما بعمق في شهريار. حكايات شهرزاد، الغنية بالحكمة والعدل والرحمة، فتحت تدريجياً قلبه المتصلّب. اكتشف، من خلال أبطال هذه الحكايات، صفاتٍ كان قد نسيها: الوفاء، الصفح، الحب الحقيقي، والقيمة التي لا تُقدّر لكل حياة إنسانية. حتى أصبح يحترم ويعجب بعمق بذكاء وشجاعة هذه المرأة التي كانت، ليلة بعد ليلة، تضع حياتها بين يديها وبين كلماتها.
+
+طوال ألف ليلة وليلة، أبقت حكاياتها السحرية الملك تحت سحر أقوى بكثير من أي سحر آخر: سحر الحكاية التي تُروى ببراعة. نسي قسوته الماضية، وحكم منذ ذلك الحين بحكمة وطيبة، وتعلّم أن الكلمات، أكثر من الخوف، يمكنها أن تحوّل القلب.
+
+عند فجر الليلة الألف والواحدة، أعلن الملك، وعيناه مليئتان بمشاعر لم يعرفها منذ سنوات، أمام كل البلاط:
+
+— شهرزاد، علّمتِني ما كنت قد نسيته منذ زمن طويل: قيمة الحياة، وقوة الصفح، والقدرة اللامحدودة للكلمات والحكايات.
+
+تزوّجها حقاً هذه المرة، ليس بدافع الخوف أو الانتقام، بل بحب حقيقي وإعجاب صادق. حكما معاً بحكمة على المملكة، وكبر أبناؤهما الثلاثة وهم يستمعون كل مساء إلى الحكايات العجيبة التي كانت والدتهم تواصل حكيها، الآن فقط من أجل متعة الكلمات وجمالها. 🌙📖✨`,
+          en: `Once upon a time, in the kingdom of Persia, there was a powerful king named Shahryar, renowned as much for his justice as for the violence of his anger. Betrayed one day by his own wife, he sank into such a dark fury that he swore never to trust a woman again. In his grief turned to cruelty, he decided to marry a new woman every night and have her executed the following morning, before she could, he believed, betray him in turn.
+
+For three years, this tragic fate struck the daughters of the kingdom, one after another, plunging the entire land into terror and grief. Families hid their daughters, and the grand vizier, tasked with finding a new bride every night, despaired at having to sacrifice so many innocent young lives.
+
+It was then that Scheherazade, the vizier's eldest daughter, wise, learned, and possessed of immense courage, made a decision that shook her father to his core: she volunteered to become the king's wife that very night, despite the grim fate awaiting her.
+
+— I know a remedy for his cruelty, she told her devastated father. Trust me.
+
+On the first night, after the wedding, as dawn approached and the king was already preparing to sign her death warrant, Scheherazade asked for one last favor: to tell a story to her younger sister Dinarzade, whom she had arranged to hide beneath the bed for this very purpose.
+
+She began a tale so captivating, filled with djinns, cunning merchants, and enchanted kingdoms, that the king, despite himself, began listening with growing fascination. But at the most thrilling moment, just as the sun began to rise, Scheherazade stopped abruptly.
+— Alas, she said, day is breaking and I must fall silent.
+
+Consumed by curiosity, the king, for the first time in three years, postponed the execution by a full day, simply to learn what happened next.
+
+And so began an extraordinary game of patience that was destined to last one thousand and one nights. Night after night, Scheherazade wove, with consummate artistry, enchanting and endless tales: the extraordinary voyages of Sinbad the Sailor, Aladdin's magic lamp, the treasure cave of Ali Baba and the forty thieves, stories of princes turned to stone, djinns trapped in bottles, flying carpets, and sunken cities — each tale always ending on a mystery, a lingering question, forcing the king to wait for the following night.
+
+As the months passed, something changed deeply within Shahryar. Scheherazade's stories, rich with wisdom, justice, and compassion, gradually opened his hardened heart. Through the heroes of these tales, he rediscovered qualities he had forgotten: loyalty, forgiveness, true love, and the immeasurable value of every human life. He came to deeply respect and admire the intelligence and courage of this woman who, night after night, held her own life in her hands and in her words.
+
+For one thousand and one nights, her magical tales kept the king under a spell far more powerful than any sorcery: the spell of a story well told. He forgot his past cruelty, ruled from then on with wisdom and kindness, and learned that words, far more than fear, could transform a heart.
+
+At the dawn of the thousand-and-first night, the king, his eyes filled with an emotion he had not known in years, declared before the entire court:
+
+— Scheherazade, you have taught me what I had forgotten for so long: the value of life, the power of forgiveness, and the boundless power of words and stories.
+
+He then married her in truth, no longer out of fear or vengeance, but out of genuine love and sincere admiration. Together they ruled the kingdom with wisdom, and their three children grew up listening, every evening, to the wonderful stories their mother continued to tell — now simply for the joy and beauty of the words themselves. 🌙📖✨`
+        },
+        {
+          id: 8,
+          title: 'Sinbad le Marin',
+          titleAr: 'السندباد البحري',
+          titleEn: 'Sinbad the Sailor',
+          icon: '⛵',
+          cover: 'c-orange',
+          level: '5-6',
+          langs: ['fr', 'ar', 'en'],
+          fr: `Sinbad était un riche marchand de Bagdad, héritier d'une grande fortune que son père avait amassée toute sa vie. Mais le jeune homme, négligent et avide de plaisirs, dilapida en quelques années tout cet héritage en fêtes somptueuses et dépenses inconsidérées. Ruiné et honteux, il décida de tenter sa chance sur les mers lointaines, espérant refaire fortune par le commerce.
+
+Lors de son premier voyage, son navire fit escale sur ce que l'équipage croyait être une petite île verdoyante. Les marins y allumèrent un grand feu pour cuisiner — mais c'était en réalité le dos d'un poisson gigantesque, endormi depuis des siècles ! Réveillé par la chaleur des flammes, le monstre marin plongea brutalement dans les profondeurs, entraînant le navire dans un naufrage terrible. Sinbad s'accrocha à une planche de bois et dériva pendant des heures avant d'être rejeté sur une plage inconnue.
+
+Survivant miraculeusement, il poursuivit malgré tout ses aventures, voyage après voyage, chacun plus périlleux et merveilleux que le précédent. Lors de son deuxième périple, abandonné par erreur sur une île déserte, il rencontra l'oiseau Roc, une créature si gigantesque que ses ailes obscurcissaient le ciel et qu'elle pouvait soulever des éléphants entiers dans ses serres pour nourrir ses petits. Avec un sang-froid remarquable, Sinbad s'attacha solidement à la patte de l'oiseau endormi grâce au turban qu'il portait, et fut ainsi transporté, terrifié mais sauvé, jusqu'à de nouvelles terres lointaines.
+
+C'est dans la légendaire Vallée des Diamants qu'il vécut l'une de ses aventures les plus audacieuses. Cette vallée regorgeait de pierres précieuses, mais elle était gardée par d'immenses serpents capables d'avaler un éléphant entier, rendant toute récolte directe impossible. Observant les techniques des marchands de la région, Sinbad eut une idée ingénieuse : il attacha de gros morceaux de viande fraîche, sur lesquels des diamants s'étaient collés naturellement en tombant des falaises, puis attendit que de puissants aigles emportent cette viande, diamants compris, jusqu'à leurs nids perchés au sommet des montagnes, hors de portée des serpents. Les marchands n'avaient alors qu'à effrayer les aigles pour récupérer les pierres précieuses.
+
+Au cours de ses voyages, il affronta aussi des cyclopes cannibales, navigua sur une mer où les vagues semblaient faites de cristal, fut capturé par des créatures à mi-chemin entre l'humain et le singe, et rencontra même un roi sous-marin qui régnait sur un royaume englouti, peuplé de créatures merveilleuses jamais vues à la surface.
+
+Après sept voyages extraordinaires, jalonnés de monstres marins, d'îles enchantées, de tempêtes dévastatrices et de trésors fabuleux, Sinbad finit par rentrer à Bagdad, non seulement plus riche que jamais, mais aussi transformé intérieurement par tout ce qu'il avait vécu et appris.
+
+Il rassembla ses amis et sa famille pour leur raconter, soir après soir, le récit détaillé de chacune de ses aventures, comme il le fit toute sa vie.
+— Les aventures m'ont appris que le courage face à l'inconnu, l'intelligence dans l'adversité, et l'humilité devant la grandeur du monde valent infiniment plus que tous les trésors qu'on peut amasser, disait-il souvent à qui voulait l'écouter.
+
+Et il vécut dès lors une existence paisible et généreuse, entouré de ses amis fidèles, partageant sa fortune avec les plus démunis, et racontant pour les générations futures ses récits devenus légendaires. ⛵🌊✨`,
+          ar: `كان السندباد تاجراً غنياً من بغداد، ورث ثروة كبيرة جمعها والده طوال حياته. لكن الشاب، المتهاون والمتعلّق بالملذّات، بذّر في سنوات قليلة كل هذا الميراث في احتفالات فاخرة ونفقات غير محسوبة. بعد أن أصابه الفقر والخزي، قرر أن يجرّب حظه في البحار البعيدة، أملاً في إعادة بناء ثروته عن طريق التجارة.
+
+في رحلته الأولى، توقفت سفينته على ما ظنّه الطاقم جزيرة صغيرة خضراء. أوقد البحارة عليها ناراً كبيرة للطبخ — لكنها كانت في الحقيقة ظهر سمكة عملاقة، نائمة منذ قرون! استيقظ الوحش البحري بحرارة اللهب، فغاص بشكل مفاجئ في الأعماق، مسبّباً غرقاً مرعباً للسفينة. تمسّك السندباد بلوح خشبي وانساق لساعات قبل أن تقذفه المياه على شاطئ مجهول.
+
+نجا بأعجوبة، وتابع رغم كل ذلك مغامراته، رحلة تلو رحلة، كل واحدة أكثر خطورة وعجباً من السابقة. في رحلته الثانية، وقد تُرك خطأً على جزيرة مهجورة، التقى بطائر العنقاء، مخلوقاً عملاقاً جداً لدرجة أن جناحيه يحجبان السماء وكان قادراً على حمل فيلة كاملة بمخالبه لتغذية صغاره. بثبات ملحوظ، ربط السندباد نفسه بقوة بقدم الطائر النائم بواسطة عمامته، وانتقل بذلك، خائفاً لكن ناجياً، إلى أراضٍ بعيدة جديدة.
+
+في وادي الألماس الأسطوري عاش إحدى أجرأ مغامراته. كان هذا الوادي مليئاً بالأحجار الكريمة، لكنه كان محروساً بثعابين عملاقة قادرة على ابتلاع فيل كامل، مما جعل أي جمع مباشر مستحيلاً. بعد مراقبة تقنيات تجار المنطقة، خطرت للسندباد فكرة بارعة: ربط قطع كبيرة من اللحم الطري، التي كانت ألماسات تلتصق بها طبيعياً عند سقوطها من الجروف، ثم الانتظار حتى تحمل نسور قوية هذا اللحم، مع الألماس، إلى أعشاشها فوق قمم الجبال، بعيداً عن متناول الثعابين. لم يكن على التجار سوى تخويف النسور لاسترجاع الأحجار الكريمة.
+
+خلال رحلاته، واجه أيضاً عمالقة ذوي عين واحدة يأكلون لحوم البشر، وعبر بحراً بدت أمواجه كأنها من الكريستال، وأُسر من مخلوقات بين الإنسان والقرد، وحتى قابل ملكاً تحت الماء يحكم مملكة غارقة، مأهولة بمخلوقات رائعة لم تُرَ أبداً على السطح.
+
+بعد سبع رحلات استثنائية، مليئة بوحوش البحر والجزر المسحورة والعواصف المدمّرة والكنوز الرائعة، عاد السندباد أخيراً إلى بغداد، ليس أغنى مما كان فقط، بل أيضاً متحوّلاً في داخله بكل ما عاشه وتعلّمه.
+
+جمع أصدقاءه وعائلته ليحكي لهم، مساءً بعد مساء، القصة المفصّلة لكل واحدة من مغامراته، كما فعل طوال حياته.
+— علّمتني المغامرات أن الشجاعة في مواجهة المجهول، والذكاء في الشدائد، والتواضع أمام عظمة العالم، تساوي أكثر بما لا يُقاس من كل الكنوز التي يمكن جمعها، كان يقول غالباً لمن يريد الاستماع إليه.
+
+وعاش منذ ذلك الحين حياة هادئة وكريمة، محاطاً بأصدقائه المخلصين، يقاسم ثروته مع الأكثر فقراً، ويحكي للأجيال القادمة حكاياته التي أصبحت أسطورية. ⛵🌊✨`,
+          en: `Sinbad was a wealthy merchant from Baghdad, heir to a great fortune his father had built up over a lifetime. But the young man, careless and eager for pleasure, squandered this entire inheritance within a few years on lavish parties and reckless spending. Ruined and ashamed, he decided to try his luck on distant seas, hoping to rebuild his fortune through trade.
+
+On his first voyage, his ship anchored at what the crew believed was a small green island. The sailors lit a great fire there to cook — but it was in fact the back of a gigantic fish, asleep for centuries! Awoken by the heat of the flames, the sea monster suddenly dove into the depths, dragging the ship into a terrible wreck. Sinbad clung to a wooden plank and drifted for hours before being washed up on an unknown shore.
+
+Surviving against all odds, he nonetheless continued his adventures, voyage after voyage, each one more perilous and wondrous than the last. On his second journey, mistakenly left behind on a deserted island, he encountered the Roc, a creature so immense that its wings darkened the sky and it could lift entire elephants in its talons to feed its young. With remarkable composure, Sinbad tied himself firmly to the sleeping bird's leg using his turban, and was thus carried, terrified but saved, to distant new lands.
+
+It was in the legendary Valley of Diamonds that he lived through one of his boldest adventures. This valley was overflowing with precious stones, but it was guarded by enormous serpents capable of swallowing a whole elephant, making any direct collection impossible. Observing the techniques used by local merchants, Sinbad had an ingenious idea: he tied large pieces of fresh meat, onto which diamonds naturally stuck after falling from the cliffs, then waited for powerful eagles to carry this meat, diamonds included, up to their nests perched atop the mountains, out of the serpents' reach. The merchants then only had to scare off the eagles to recover the precious stones.
+
+During his travels, he also faced cannibalistic cyclopes, sailed across a sea whose waves seemed made of crystal, was captured by creatures halfway between human and ape, and even met an underwater king who ruled over a sunken kingdom, inhabited by marvelous creatures never seen on the surface.
+
+After seven extraordinary voyages, marked by sea monsters, enchanted islands, devastating storms, and fabulous treasures, Sinbad finally returned to Baghdad, not only richer than ever, but also inwardly transformed by everything he had lived through and learned.
+
+He gathered his friends and family to tell them, evening after evening, the detailed story of each of his adventures, as he would do for the rest of his life.
+— Adventures taught me that courage in the face of the unknown, intelligence in adversity, and humility before the greatness of the world are worth immeasurably more than any treasure one could ever gather, he often told those willing to listen.
+
+And from then on he lived a peaceful and generous life, surrounded by his loyal friends, sharing his fortune with those in need, and recounting for future generations his tales, which had by then become legend. ⛵🌊✨`
+        },
+      ];
+      // TODO: remplacer par → await supabase.from('kissas').select('*')
+    }
+
+    // ===== STATE =====
+    let allStories = [];
+    let activeLevel = 'all';
+    let activeLang = null;
+
+    // ===== RENDER =====
+    function renderStories(stories) {
+      const grid = document.getElementById('storiesGrid');
+      if (!stories.length) {
+        grid.innerHTML = '<p style="color:#aaa;text-align:center;padding:40px;grid-column:1/-1">No stories found for this filter. 😊</p>';
+        return;
+      }
+      grid.innerHTML = stories.map(s => `
+        <div class="story-card" data-level="${s.level}" onclick="openStory(${s.id})">
+          <div class="story-cover ${s.cover}">
+            ${s.icon}
+            <div class="story-langs">
+              ${s.langs.includes('fr') ? '<span class="lang-pill">FR</span>' : ''}
+              ${s.langs.includes('ar') ? '<span class="lang-pill">AR</span>' : ''}
+              ${s.langs.includes('en') ? '<span class="lang-pill">EN</span>' : ''}
+            </div>
+          </div>
+          <div class="story-info">
+            <span class="level-badge">🎓 ${s.level === '1-2' ? '1st - 2nd' : s.level === '3-4' ? '3rd - 4th' : '5th - 6th'}</span>
+            <h4>${s.title}</h4>
+            <p>${s.titleAr} · ${s.titleEn}</p>
+            <button class="story-read-btn">📖 Read Story</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function applyFilters() {
+      let filtered = allStories;
+      if (activeLevel !== 'all') {
+        filtered = filtered.filter(s => s.level === activeLevel);
+      }
+      if (activeLang) {
+        filtered = filtered.filter(s => s.langs.includes(activeLang));
+      }
+      renderStories(filtered);
+    }
+
+    function filterStories(level, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => {
+        if(['all','1-2','3-4','5-6'].includes(b.getAttribute('onclick')?.match(/'([^']+)'/)?.[1])) b.classList.remove('active');
+      });
+      btn.classList.add('active');
+      activeLevel = level;
+      applyFilters();
+    }
+
+    function filterLang(lang, btn) {
+      // Toggle
+      if (activeLang === lang) {
+        activeLang = null;
+        btn.classList.remove('active');
+      } else {
+        document.querySelectorAll('.filter-btn').forEach(b => {
+          const match = b.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+          if(['fr','ar','en'].includes(match)) b.classList.remove('active');
+        });
+        activeLang = lang;
+        btn.classList.add('active');
+      }
+      applyFilters();
+    }
+
+    // ===== MODAL =====
+    let currentStory = null;
+    let currentLang = 'en';
+    let currentPage = { fr: 0, ar: 0, en: 0 };
+
+    function splitIntoPages(text) {
+      if (!text) return ['(Texte non disponible)'];
+      // Chaque histoire est écrite en blocs séparés par une ligne vide.
+      // On regroupe 2 blocs par page pour une lecture confortable.
+      const blocks = text.split(/\n\s*\n/).map(b => b.trim()).filter(Boolean);
+      const pages = [];
+      for (let i = 0; i < blocks.length; i += 2) {
+        pages.push(blocks.slice(i, i + 2).join('\n\n'));
+      }
+      return pages.length ? pages : [text];
+    }
+
+    function openStory(id) {
+      currentStory = allStories.find(s => s.id === id);
+      if (!currentStory) return;
+      document.getElementById('modalStoryTitle').textContent = '📖 ' + currentStory.titleEn;
+      currentStory._pages = {
+        fr: splitIntoPages(currentStory.fr),
+        ar: splitIntoPages(currentStory.ar),
+        en: splitIntoPages(currentStory.en)
+      };
+      currentPage = { fr: 0, ar: 0, en: 0 };
+      switchLang('en', document.querySelectorAll('.modal-lang-tab')[2]);
+      document.getElementById('storyModal').classList.add('open');
+    }
+
+    function renderReaderPage(lang, direction) {
+      const pages = currentStory._pages[lang];
+      const idx = currentPage[lang];
+      const container = document.getElementById('text-' + lang);
+      container.innerHTML = `<div class="reader-page active${direction === 'prev' ? ' slide-prev' : ''}">${pages[idx]}</div>`;
+
+      // Progress bar + counter
+      const total = pages.length;
+      const pct = total > 1 ? Math.round(((idx + 1) / total) * 100) : 100;
+      document.getElementById('readerProgressFill').style.width = pct + '%';
+      const labelMap = { fr: `Page ${idx + 1} / ${total}`, en: `Page ${idx + 1} / ${total}`, ar: `صفحة ${idx + 1} / ${total}` };
+      document.getElementById('readerPageCounter').textContent = labelMap[lang];
+
+      // Dots
+      const dotsWrap = document.getElementById('readerDots');
+      dotsWrap.innerHTML = pages.map((_, i) => `<button class="reader-dot${i === idx ? ' active' : ''}" onclick="readerGoTo(${i})"></button>`).join('');
+
+      // Prev/Next buttons
+      document.getElementById('readerPrevBtn').disabled = idx === 0;
+      const nextBtn = document.getElementById('readerNextBtn');
+      const isLast = idx === total - 1;
+      nextBtn.innerHTML = isLast ? '<span class="btn-label">End 🎉</span>' : '<span class="btn-label">Next</span> ▶';
+      nextBtn.disabled = false;
+    }
+
+    function readerGoTo(i) {
+      currentPage[currentLang] = i;
+      renderReaderPage(currentLang);
+    }
+
+    function readerGoNext() {
+      const pages = currentStory._pages[currentLang];
+      if (currentPage[currentLang] < pages.length - 1) {
+        currentPage[currentLang]++;
+        renderReaderPage(currentLang);
+      } else {
+        closeStoryModal();
+      }
+    }
+
+    function readerGoPrev() {
+      if (currentPage[currentLang] > 0) {
+        currentPage[currentLang]--;
+        renderReaderPage(currentLang, 'prev');
+      }
+    }
+
+    function switchLang(lang, btn) {
+      document.querySelectorAll('.modal-lang-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.story-text').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('text-' + lang).classList.add('active');
+      currentLang = lang;
+      renderReaderPage(lang);
+    }
+
+    function closeStoryModal() {
+      document.getElementById('storyModal').classList.remove('open');
+    }
+
+    document.getElementById('storyModal').addEventListener('click', function(e) {
+      if (e.target === this) closeStoryModal();
+    });
+
+    // Navigation clavier (flèches)
+    document.addEventListener('keydown', function(e) {
+      if (!document.getElementById('storyModal').classList.contains('open')) return;
+      if (e.key === 'ArrowRight') currentLang === 'ar' ? readerGoPrev() : readerGoNext();
+      if (e.key === 'ArrowLeft') currentLang === 'ar' ? readerGoNext() : readerGoPrev();
+      if (e.key === 'Escape') closeStoryModal();
+    });
+
+    // ===== INIT =====
+    async function init() {
+      allStories = await getStories();
+      renderStories(allStories);
+    }
+    init();
+
+    // Mobile menu
+    document.querySelector('.menu-toggle').addEventListener('click', () => {
+      document.getElementById('mobile-nav').classList.toggle('is-open');
+    });
+
+    // Lang selector
+    function changeLanguage(lang) {
+      const pages = { fr: 'kissas_fr.html', en: 'kissas_en.html', ar: 'kissas_ar.html' };
+      if (pages[lang]) window.location.href = pages[lang];
+    }
+    document.getElementById('langSelect').addEventListener('change', e => changeLanguage(e.target.value));
+    document.getElementById('langSelectMobile').addEventListener('change', e => changeLanguage(e.target.value));
+  </script>
+</body>
+</html>

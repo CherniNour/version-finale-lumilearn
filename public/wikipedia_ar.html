@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LumiLearn : مواضيع ويكيبيديا التعليمية</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styleSIGHT.css" />
+</head>
+
+<style>
+  .wiki-card p {
+    color: #555;
+    font-size: 0.95em;
+    margin-bottom: 15px;
+    line-height: 1.6;
+  }
+
+  .wiki-card a {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+    color: white;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .wiki-card a:hover {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    transform: scale(1.05);
+  }
+
+  @media (max-width: 850px) {
+    .resources-grid {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .resources-grid {
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+  }
+</style>
+
+<body>
+
+<div id="navbar-placeholder"></div>
+
+<div class="container">
+
+  <div class="home-intro">
+    <h2>🌐 مواضيع ويكيبيديا التعليمية</h2>
+    <p class="section-subtitle">
+      اكتشف وتعلّم من خلال هذه المواضيع الممتعة المستوحاة من ويكيبيديا.
+    </p>
+  </div>
+
+  <div id="wikiGrid" class="resources-grid">
+    <!-- Cards will be generated dynamically -->
+  </div>
+
+</div>
+
+<footer>
+
+  <div class="footer-content">
+
+    <div class="footer-section">
+      <h4>🌟 LumiLearn</h4>
+      <p>منصة تعليمية تساعد الأطفال على التعلم بطريقة ممتعة.</p>
+    </div>
+
+    <div class="footer-section">
+      <h4>خريطة الموقع</h4>
+      <ul>
+        <li><a href="#home">🏠 الرئيسية</a></li>
+        <li><a href="#audio">🎧 الكتب الصوتية</a></li>
+        <li><a href="#articles">📚 المقالات</a></li>
+        <li><a href="#curriculum">🎓 البرنامج الدراسي</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h4>الموارد</h4>
+      <ul>
+        <li><a href="#wikipedia">🌐 ويكيبيديا</a></li>
+        <li><a href="#quiz">🧠 الاختبارات</a></li>
+        <li><a href="#about">💡 حول المنصة</a></li>
+        <li><a href="#contact">📩 اتصل بنا</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h4>اللغات</h4>
+      <ul>
+        <li>🇫🇷 الفرنسية</li>
+        <li>🇬🇧 الإنجليزية</li>
+        <li>🇸🇦 العربية</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2025 LumiLearn | مشروع IEEE ENSIT CS × SIGHT Group 🌟</p>
+  </div>
+
+</footer>
+
+<script>
+  // === مواضيع ويكيبيديا التعليمية ===
+  const wikiTopics = [
+    {
+      title: "النظام الشمسي",
+      desc: "يتكوّن النظام الشمسي من الشمس والأجرام السماوية التي تدور حولها.",
+      link: "https://ar.wikipedia.org/wiki/النظام_الشمسي"
+    },
+
+    {
+      title: "التركيب الضوئي",
+      desc: "التركيب الضوئي هو عملية تقوم بها النباتات لتحويل الضوء إلى طاقة كيميائية.",
+      link: "https://ar.wikipedia.org/wiki/تركيب_ضوئي"
+    },
+
+    {
+      title: "البراكين",
+      desc: "البركان هو جبل يتكوّن نتيجة خروج الصهارة من باطن الأرض.",
+      link: "https://ar.wikipedia.org/wiki/بركان"
+    },
+
+    {
+      title: "الماء",
+      desc: "الماء عنصر أساسي للحياة ويتكوّن من الهيدروجين والأكسجين.",
+      link: "https://ar.wikipedia.org/wiki/ماء"
+    },
+
+    {
+      title: "الأرض",
+      desc: "الأرض هي الكوكب الثالث في النظام الشمسي والوحيد المعروف بوجود الحياة عليه.",
+      link: "https://ar.wikipedia.org/wiki/الأرض"
+    },
+
+    {
+      title: "الحيوانات",
+      desc: "الحيوانات كائنات حيّة قادرة على الحركة والتفاعل مع البيئة.",
+      link: "https://ar.wikipedia.org/wiki/حيوان"
+    },
+
+    {
+      title: "الكهرباء",
+      desc: "الكهرباء ظاهرة تنتج عن حركة الشحنات الكهربائية.",
+      link: "https://ar.wikipedia.org/wiki/كهرباء"
+    },
+
+    {
+      title: "النباتات",
+      desc: "النباتات تصنع غذاءها بنفسها من خلال التركيب الضوئي وتساعد على تنقية الهواء.",
+      link: "https://ar.wikipedia.org/wiki/نبات"
+    },
+
+    {
+      title: "الفضاء",
+      desc: "الفضاء هو الامتداد الذي توجد فيه النجوم والكواكب والمجرات.",
+      link: "https://ar.wikipedia.org/wiki/فضاء_خارجي"
+    }
+  ];
+
+  const grid = document.getElementById("wikiGrid");
+
+  function renderWiki(list) {
+    grid.innerHTML = list.map(topic => `
+      <div class="resource-card wiki-card">
+        <h3>${topic.title}</h3>
+        <p>${topic.desc}</p>
+        <a href="${topic.link}" target="_blank" rel="noopener noreferrer">
+          اقرأ المزيد
+        </a>
+      </div>
+    `).join('');
+  }
+
+  renderWiki(wikiTopics);
+</script>
+
+<script src="navbar.js"></script>
+<script>initNavbar('ar')</script>
+
+</body>
+</html>

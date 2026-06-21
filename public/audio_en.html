@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LumiLearn - Audio Books</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styleSIGHT.css" />
+  <link rel="stylesheet" href="search-styles.css" />
+</head>
+<body>
+
+  <div id="navbar-placeholder"></div>
+
+  <section class="search-section">
+    <div class="search-content">
+      <h3>Search for an Audio Book 🎧</h3>
+      <div class="search-bar">
+        <input id="searchInput" type="text" placeholder="Type a book title...">
+        <button id="searchButton">Search</button>
+      </div>
+    </div>
+    <div id="searchResults"></div>
+  </section>
+
+  <div class="container">
+    <div class="home-intro">
+      <h2>Suggested Audio Books</h2>
+      <p class="section-subtitle" id="subtitleAudio">
+        Listen to fun and educational stories made just for you!
+      </p>
+    </div>
+
+    <!-- Loading indicator -->
+    <div id="loadingIndicator" style="text-align:center;padding:40px;font-size:1.2em;">
+      ⏳ Loading audio books...
+    </div>
+
+    <div id="audioGrid" class="resources-grid"></div>
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>🌟 LumiLearn</h4>
+        <p>An educational platform for children.</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2025 LumiLearn | IEEE ENSIT CS × SIGHT Group Project 🌟</p>
+    </div>
+  </footer>
+
+  <!-- ======================================================
+       JAVASCRIPT
+       1. api.js  — fetch() functions for the backend
+       2. auth.js — user session management
+  ====================================================== -->
+
+  <script src="api.js"></script>
+  <script src="auth.js"></script>
+
+  <script>
+    // Mobile menu (element injected by navbar.js → check if it exists)
+    const menuToggleBtn = document.querySelector('.menu-toggle');
+
+    if (menuToggleBtn) {
+      menuToggleBtn.addEventListener('click', () => {
+        document.getElementById('mobile-nav').classList.toggle('is-open');
+      });
+    }
+
+    // Language switcher
+    const langSelectEl = document.getElementById('langSelect');
+
+    if (langSelectEl) {
+      langSelectEl.addEventListener('change', e => {
+        if (e.target.value === 'ar') window.location.href = 'audio_ar.html';
+        else if (e.target.value === 'fr') window.location.href = 'audio_fr.html';
+      });
+    }
+
+    // ── Local reference to loaded audios (used for search) ──
+    let allAudios = [];
+
+    // ── Display cards ───────────────────────────────────────
+    function renderAudios(list) {
+      const grid = document.getElementById('audioGrid');
+      document.getElementById('loadingIndicator').style.display = 'none';
+
+      if (!list || list.length === 0) {
+        grid.innerHTML = '<p style="text-align:center;color:#666;">No audio books found.</p>';
+        return;
+      }
+
+      // Backend serves MP3 files statically → full URL
+      const BASE = 'http://localhost:5001/';
+
+      grid.innerHTML = list.map(book => `
+        <div class="resource-card">
+          <div style="font-size:2.5em;margin-bottom:10px;">${book.emoji || '🎧'}</div>
+
+          <h3>${book.titre}</h3>
+
+          <p>${book.description}</p>
+
+          ${book.niveau > 0 ? `
+            <span style="
+              background:#FFE5F1;
+              color:#FF91AF;
+              padding:3px 10px;
+              border-radius:20px;
+              font-size:0.8em;
+            ">
+              Grade ${book.niveau}
+            </span>
+          ` : ''}
+
+          <audio
+            controls
+            src="${BASE}${book.fichier}"
+            style="margin-top:15px;width:100%;"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          </audio>
+
+          <p style="display:none;color:#f44336;font-size:0.85em;">
+            ⚠️ Audio file unavailable
+          </p>
+        </div>
+      `).join('');
+    }
+
+    // ── Local search (filters already loaded audios) ────────
+    function searchAudio() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+
+      const filtered = allAudios.filter(b =>
+        b.titre.toLowerCase().includes(q) ||
+        b.description.toLowerCase().includes(q)
+      );
+
+      renderAudios(filtered.length ? filtered : allAudios);
+    }
+
+    document.getElementById('searchButton')
+      .addEventListener('click', searchAudio);
+
+    document.getElementById('searchInput')
+      .addEventListener('keyup', e => {
+        if (e.key === 'Enter') searchAudio();
+      });
+
+    // ── Load audios from backend ─────────────────────────────
+    async function loadAudios() {
+      try {
+        const user = getCurrentUser();
+
+        let data;
+
+        if (user) {
+          // Logged-in user → audios adapted to their grade
+          document.getElementById('subtitleAudio').textContent =
+            `Recommended audio books for Grade ${user.classe} 🎓`;
+
+          data = await apiAudiosParClasse(user.classe);
+
+        } else {
+          // Not logged in → all audios
+          data = await apiAudiosParLangue('en');
+        }
+
+        if (data.success) {
+          allAudios = data.audios;
+          renderAudios(allAudios);
+
+        } else {
+          throw new Error(data.message);
+        }
+
+      } catch (err) {
+        console.error('Error loading audios:', err.message);
+
+        // Fallback: display local audios if backend unavailable
+        document.getElementById('loadingIndicator').innerHTML =
+          '⚠️ Backend unavailable — displaying local data';
+
+        const fallback = [
+          {
+            titre:'The Little Seed',
+            description:"How a tiny seed becomes a powerful tree.",
+            fichier:'Audio/THETINYSEED.mp3',
+            emoji:'🌱',
+            niveau:0
+          },
+          {
+            titre:'A Day at the Farm',
+            description:"Discover the animals living on the farm.",
+            fichier:'Audio/Farm.mp3',
+            emoji:'🐄',
+            niveau:1
+          },
+          {
+            titre:'How to Catch a Rainbow',
+            description:"Learn colors through a joyful story.",
+            fichier:'Audio/RAINBOW.mp3',
+            emoji:'🌈',
+            niveau:1
+          },
+          {
+            titre:'Planet Earth',
+            description:"Explore the wonders of our planet!",
+            fichier:'Audio/Earth.mp3',
+            emoji:'🌍',
+            niveau:3
+          },
+          {
+            titre:'My First Math',
+            description:"Counting becomes fun for young learners.",
+            fichier:'Audio/Math.mp3',
+            emoji:'🔢',
+            niveau:1
+          },
+          {
+            titre:'The Brave Little Star',
+            description:"A story about courage and friendship.",
+            fichier:'Audio/Star.mp3',
+            emoji:'⭐',
+            niveau:0
+          }
+        ];
+
+        // Local fallback audio files
+        allAudios = fallback.map(a => ({
+          ...a,
+          fichier: a.fichier
+        }));
+
+        document.getElementById('loadingIndicator').style.display = 'none';
+
+        renderAudios(allAudios.map(a => ({
+          ...a,
+          fichier: a.fichier
+        })));
+
+        // Re-render with local paths
+        const grid = document.getElementById('audioGrid');
+
+        grid.innerHTML = fallback.map(book => `
+          <div class="resource-card">
+            <div style="font-size:2.5em;margin-bottom:10px;">${book.emoji}</div>
+
+            <h3>${book.titre}</h3>
+
+            <p>${book.description}</p>
+
+            <audio
+              controls
+              src="${book.fichier}"
+              style="margin-top:15px;width:100%;">
+            </audio>
+          </div>
+        `).join('');
+      }
+    }
+
+    // Start loading
+    loadAudios();
+  </script>
+
+  <script src="navbar.js"></script>
+  <script>initNavbar('en')</script>
+
+</body>
+</html>

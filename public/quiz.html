@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz Interactifs - LumiLearn</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styleSIGHT.css" />
+  <link rel="stylesheet" href="styleQuiz.css" />
+  <link rel="stylesheet" href="apropos.css" />
+</head>
+
+<body>
+    <div id="navbar-placeholder"></div>
+
+
+  <!-- ============ Hero Section ============ -->
+  <section class="quiz-hero">
+    <div class="hero-content">
+      <h2>Quiz Interactifs 🧠✨</h2>
+      <p>
+        Teste tes connaissances avec nos quiz amusants ! Choisis ton niveau, ta matière 
+        et ta difficulté pour commencer l'aventure ! 🎯📖
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ Quiz Selection Section ============ -->
+  <div class="quiz-container">
+    
+    <!-- Step 1: Grade Selection -->
+    <div id="gradeSelection" class="selection-section active">
+      <h3 class="section-title">📚 Choisis ton niveau scolaire</h3>
+      <div class="grade-grid">
+        <div class="grade-card" data-grade="1">
+          <div class="grade-icon">1️⃣</div>
+          <h4>1ère Année</h4>
+          <p>Les bases essentielles</p>
+        </div>
+        <div class="grade-card" data-grade="2">
+          <div class="grade-icon">2️⃣</div>
+          <h4>2ème Année</h4>
+          <p>Développe tes compétences</p>
+        </div>
+        <div class="grade-card" data-grade="3">
+          <div class="grade-icon">3️⃣</div>
+          <h4>3ème Année</h4>
+          <p>Approfondis tes connaissances</p>
+        </div>
+        <div class="grade-card" data-grade="4">
+          <div class="grade-icon">4️⃣</div>
+          <h4>4ème Année</h4>
+          <p>Élargis tes horizons</p>
+        </div>
+        <div class="grade-card" data-grade="5">
+          <div class="grade-icon">5️⃣</div>
+          <h4>5ème Année</h4>
+          <p>Prépare le collège</p>
+        </div>
+        <div class="grade-card" data-grade="6">
+          <div class="grade-icon">6️⃣</div>
+          <h4>6ème Année</h4>
+          <p>Examen de fin d'études</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Subject Selection -->
+    <div id="subjectSelection" class="selection-section">
+      <button class="back-btn" onclick="goBack('gradeSelection')">← Retour</button>
+      <h3 class="section-title">📖 Choisis ta matière</h3>
+      <div class="subject-grid" id="subjectGrid">
+        <!-- Subjects will be dynamically loaded -->
+      </div>
+    </div>
+
+    <!-- Step 3: Difficulty Selection -->
+    <div id="difficultySelection" class="selection-section">
+      <button class="back-btn" onclick="goBack('subjectSelection')">← Retour</button>
+      <h3 class="section-title">🎯 Choisis la difficulté</h3>
+      <div class="difficulty-grid">
+        <div class="difficulty-card" data-difficulty="facile">
+          <div class="difficulty-icon">😊</div>
+          <h4>Facile</h4>
+          <p>10 questions simples</p>
+          <div class="difficulty-stars">⭐⭐</div>
+        </div>
+        <div class="difficulty-card" data-difficulty="moyen">
+          <div class="difficulty-icon">🤔</div>
+          <h4>Moyen</h4>
+          <p>15 questions variées</p>
+          <div class="difficulty-stars">⭐⭐⭐</div>
+        </div>
+        <div class="difficulty-card" data-difficulty="difficile">
+          <div class="difficulty-icon">🔥</div>
+          <h4>Difficile</h4>
+          <p>20 questions avancées</p>
+          <div class="difficulty-stars">⭐⭐⭐⭐⭐</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Quiz Section -->
+    <div id="quizSection" class="selection-section">
+      <div class="quiz-header">
+        <button class="back-btn" onclick="goBack('difficultySelection')">← Retour</button>
+        <div class="quiz-info">
+          <span id="quizTitle">Quiz</span>
+          <span id="quizProgress">Question 1/10</span>
+        </div>
+        <div class="quiz-timer" id="quizTimer">⏱️ 00:00</div>
+      </div>
+
+      <div class="quiz-content">
+        <div class="question-card">
+          <h4 id="questionText">Question apparaîtra ici</h4>
+          <div class="answers-grid" id="answersGrid">
+            <!-- Answers will be dynamically loaded -->
+          </div>
+        </div>
+        <button class="next-btn" id="nextBtn" disabled>Suivant →</button>
+      </div>
+    </div>
+
+    <!-- Step 5: Results Section -->
+    <div id="resultsSection" class="selection-section">
+      <div class="results-card">
+        <div class="results-icon" id="resultsIcon">🎉</div>
+        <h3 id="resultsTitle">Félicitations !</h3>
+        <div class="score-display">
+          <div class="score-circle">
+            <span id="scoreText">0/10</span>
+          </div>
+          <p id="scorePercentage">0%</p>
+        </div>
+        <div class="results-message" id="resultsMessage"></div>
+        
+        <div class="results-actions">
+          <button class="btn-primary" onclick="showCorrection()">📋 Voir la correction</button>
+          <button class="btn-secondary" onclick="restartQuiz()">🔄 Refaire le quiz</button>
+          <button class="btn-secondary" onclick="goToSelection()">🏠 Nouveau quiz</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 6: Correction Section -->
+    <div id="correctionSection" class="selection-section">
+      <button class="back-btn" onclick="goBack('resultsSection')">← Retour aux résultats</button>
+      <h3 class="section-title">📋 Correction détaillée</h3>
+      <div id="correctionContent" class="correction-content">
+        <!-- Correction will be dynamically loaded -->
+      </div>
+      <div class="correction-actions">
+        <button class="btn-primary" onclick="restartQuiz()">🔄 Refaire le quiz</button>
+        <button class="btn-secondary" onclick="goToSelection()">🏠 Nouveau quiz</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============ Footer ============ -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>🌟 LumiLearn</h4>
+        <p>Une plateforme éducative pour aider les enfants à apprendre en s'amusant.</p>
+      </div>
+      
+      <div class="footer-section">
+        <h4>Plan du Site</h4>
+        <ul>
+          <li><a href="indexSIGHT_fr_fr.html">🏠 Accueil</a></li>
+          <li><a href="audio.html">🎧 Livres Audio</a></li>
+          <li><a href="articles.html">📚 Articles</a></li>
+          <li><a href="curriculum.html">🎓 Programme</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h4>Ressources</h4>
+        <ul>
+          <li><a href="wikipedia.html">🌐 Wikipedia</a></li>
+          <li><a href="quiz.html">🧠 Quiz</a></li>
+          <li><a href="apropos.html">💡 À Propos</a></li>
+          <li><a href="contact.html">📩 Contact</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h4>Langues</h4>
+        <ul>
+          <li>🇫🇷 Français</li>
+          <li>🇬🇧 English</li>
+          <li>🇸🇦 العربية</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>© 2025 LumiLearn | Projet IEEE ENSIT CS × SIGHT Group 🌟</p>
+    </div>
+  </footer>
+
+  <!-- api.js doit être chargé avant auth.js et quiz.js -->
+  <script src="api.js"></script>
+  <script src="auth.js"></script>
+  <script src="quiz.js"></script>
+  <script src="navbar.js"></script>
+<script>initNavbar('fr')</script> 
+</body>
+</html>

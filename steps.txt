@@ -1,0 +1,82 @@
+=======================================
+  LumiLearn - Guide de lancement Backend
+=======================================
+
+1. ALLER DANS LE BON DOSSIER
+----------------------------
+
+Ouvre un terminal dans VS Code ou CMD et place-toi dans le backend :
+
+    cd chemin/vers/LumiLearn/backend
+
+Exemple :
+    cd C:\Users\nour\Downloads\LumiLearn-main\backend
+
+
+2. INSTALLER LES DEPENDANCES (TRES IMPORTANT)
+---------------------------------------------
+
+C'est l'etape la plus importante :
+
+    npm install
+
+Cela installe :
+    - express
+    - mongoose
+    - dotenv
+    - et toutes les autres dependances du projet.
+
+
+3. VERIFIER LE FICHIER .env
+---------------------------
+
+Creer ou verifier le fichier :
+
+    backend/.env
+
+Exemple :
+    PORT=5001
+    MONGODB_URI=mongodb://localhost:27017/lumilearn
+    SESSION_SECRET=secret123
+
+
+4. VERIFIER MONGODB
+-------------------
+
+Tu dois avoir l'un des deux :
+
+    [Local]  MongoDB installe sur ton PC
+    [Atlas]  Lien cloud MongoDB (MongoDB Atlas)
+
+
+5. LANCER LE BACKEND
+--------------------
+
+    npm run dev
+
+Ou directement :
+    node src/server.js
+
+
+6. OUVRIR LE SITE
+-----------------
+
+Dans ton navigateur (Firefox recommande), ouvre :
+
+    http://localhost:5001/login.html
+
+
+=======================================
+  RECAPITULATIF DES COMMANDES
+=======================================
+
+    cd C:\Users\nour\Downloads\LumiLearn-main\backend
+    npm install
+    npm run dev
+
+Puis ouvre : http://localhost:5001/login.html
+
+
+=======================================
+  FIN DU GUIDE
+=======================================

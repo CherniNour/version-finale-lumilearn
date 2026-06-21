@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LumiLearn | Cartes mémoire</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="jeux2.css" />
+</head>
+<body>
+    <!-- ============ Header (Style LumiLearn) ============ -->
+    <header class="main-header">
+        <div class="header-container">
+            <h1>🌟 LumiLearn</h1>
+            <nav class="desktop-nav">
+                <a href="jeux_fr.html" class="home-btn">🏠 Retour</a>
+                
+                <div class="game-controls">
+                    <button id="restartBtn" class="top-ctrl">Recommencer</button>
+                    <button id="resetBestBtn" class="top-ctrl">Effacer Record</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Grille du jeu -->
+        <div class="left_side">
+            <div id="board" class="memory-board">
+                <!-- Cartes injectées dynamiquement par JS -->
+            </div>
+        </div>
+
+        <!-- Tableau des scores et statistiques -->
+        <div class="right_side">
+            <div class="dashboard-box">
+                Temps Écoulé
+                <span id="timerVal" class="dashboard-value">00:00</span>
+            </div>
+            
+            <div class="dashboard-box">
+                Coups Joués
+                <span id="movesVal" class="dashboard-value">0</span>
+            </div>
+
+            <div class="best-score-info">
+                Meilleur Record (Coups)
+                <span id="bestScoreVal">-</span>
+            </div>
+
+            <div class="best-score-info">
+                Meilleur Temps
+                <span id="bestTimeVal">-</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de Victoire -->
+    <div id="victoryModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-title">Félicitations ! 🎉</div>
+            <p>Tu as trouvé toutes les paires avec succès ! Tu es un champion.</p>
+            <div class="modal-stats">
+                <div>Temps final : <span id="finalTimeVal">00:00</span></div>
+                <div>Nombre de coups : <span id="finalMovesVal">0</span></div>
+                <div id="newRecordMsg" style="color: var(--primary-pink); font-weight: bold; display: none;">🏆 Nouveau record personnel !</div>
+            </div>
+            <button id="replayBtn" class="modal-btn">Rejouer</button>
+        </div>
+    </div>
+
+    <script src="jeux2_fr.js"></script>
+</body>
+</html>

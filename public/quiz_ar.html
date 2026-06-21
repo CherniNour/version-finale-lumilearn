@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>الاختبارات التفاعلية - LumiLearn</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styleSIGHT.css" />
+  <link rel="stylesheet" href="styleQuiz.css" />
+  <link rel="stylesheet" href="apropos.css" />
+</head>
+
+<body>
+
+<div id="navbar-placeholder"></div>
+
+<!-- ============ Hero Section ============ -->
+<section class="quiz-hero">
+  <div class="hero-content">
+
+    <h2>اختبارات تفاعلية 🧠✨</h2>
+
+    <p>
+      اختبر معلوماتك من خلال اختبارات ممتعة!
+      اختر مستواك الدراسي والمادة ودرجة الصعوبة لبدء المغامرة! 🎯📖
+    </p>
+
+  </div>
+</section>
+
+<!-- ============ Quiz Selection Section ============ -->
+<div class="quiz-container">
+
+  <!-- Step 1 -->
+  <div id="gradeSelection" class="selection-section active">
+
+    <h3 class="section-title">
+      📚 اختر مستواك الدراسي
+    </h3>
+
+    <div class="grade-grid">
+
+      <div class="grade-card" data-grade="1">
+        <div class="grade-icon">1️⃣</div>
+        <h4>السنة الأولى</h4>
+        <p>الأساسيات المهمة</p>
+      </div>
+
+      <div class="grade-card" data-grade="2">
+        <div class="grade-icon">2️⃣</div>
+        <h4>السنة الثانية</h4>
+        <p>طوّر مهاراتك</p>
+      </div>
+
+      <div class="grade-card" data-grade="3">
+        <div class="grade-icon">3️⃣</div>
+        <h4>السنة الثالثة</h4>
+        <p>عمّق معارفك</p>
+      </div>
+
+      <div class="grade-card" data-grade="4">
+        <div class="grade-icon">4️⃣</div>
+        <h4>السنة الرابعة</h4>
+        <p>اكتشف مجالات جديدة</p>
+      </div>
+
+      <div class="grade-card" data-grade="5">
+        <div class="grade-icon">5️⃣</div>
+        <h4>السنة الخامسة</h4>
+        <p>استعد للمرحلة الإعدادية</p>
+      </div>
+
+      <div class="grade-card" data-grade="6">
+        <div class="grade-icon">6️⃣</div>
+        <h4>السنة السادسة</h4>
+        <p>الاستعداد لامتحان نهاية المرحلة الابتدائية</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Step 2 -->
+  <div id="subjectSelection" class="selection-section">
+
+    <button class="back-btn" onclick="goBack('gradeSelection')">
+      ← رجوع
+    </button>
+
+    <h3 class="section-title">📖 اختر المادة</h3>
+
+    <div class="subject-grid" id="subjectGrid">
+      <!-- Subjects dynamically loaded -->
+    </div>
+
+  </div>
+
+  <!-- Step 3 -->
+  <div id="difficultySelection" class="selection-section">
+
+    <button class="back-btn" onclick="goBack('subjectSelection')">
+      ← رجوع
+    </button>
+
+    <h3 class="section-title">🎯 اختر مستوى الصعوبة</h3>
+
+    <div class="difficulty-grid">
+
+      <div class="difficulty-card" data-difficulty="easy">
+        <div class="difficulty-icon">😊</div>
+        <h4>سهل</h4>
+        <p>10 أسئلة بسيطة</p>
+        <div class="difficulty-stars">⭐⭐</div>
+      </div>
+
+      <div class="difficulty-card" data-difficulty="medium">
+        <div class="difficulty-icon">🤔</div>
+        <h4>متوسط</h4>
+        <p>15 سؤالاً متنوعاً</p>
+        <div class="difficulty-stars">⭐⭐⭐</div>
+      </div>
+
+      <div class="difficulty-card" data-difficulty="hard">
+        <div class="difficulty-icon">🔥</div>
+        <h4>صعب</h4>
+        <p>20 سؤالاً متقدماً</p>
+        <div class="difficulty-stars">⭐⭐⭐⭐⭐</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Step 4 -->
+  <div id="quizSection" class="selection-section">
+
+    <div class="quiz-header">
+
+      <button class="back-btn" onclick="goBack('difficultySelection')">
+        ← رجوع
+      </button>
+
+      <div class="quiz-info">
+        <span id="quizTitle">الاختبار</span>
+        <span id="quizProgress">السؤال 1/10</span>
+      </div>
+
+      <div class="quiz-timer" id="quizTimer">
+        ⏱️ 00:00
+      </div>
+
+    </div>
+
+    <div class="quiz-content">
+
+      <div class="question-card">
+
+        <h4 id="questionText">
+          سيظهر السؤال هنا
+        </h4>
+
+        <div class="answers-grid" id="answersGrid">
+          <!-- Answers dynamically loaded -->
+        </div>
+
+      </div>
+
+      <button class="next-btn" id="nextBtn" disabled>
+        التالي →
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Step 5 -->
+  <div id="resultsSection" class="selection-section">
+
+    <div class="results-card">
+
+      <div class="results-icon" id="resultsIcon">🎉</div>
+
+      <h3 id="resultsTitle">أحسنت!</h3>
+
+      <div class="score-display">
+
+        <div class="score-circle">
+          <span id="scoreText">0/10</span>
+        </div>
+
+        <p id="scorePercentage">0%</p>
+
+      </div>
+
+      <div class="results-message" id="resultsMessage"></div>
+
+      <div class="results-actions">
+
+        <button class="btn-primary" onclick="showCorrection()">
+          📋 عرض التصحيح
+        </button>
+
+        <button class="btn-secondary" onclick="restartQuiz()">
+          🔄 إعادة الاختبار
+        </button>
+
+        <button class="btn-secondary" onclick="goToSelection()">
+          🏠 اختبار جديد
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Step 6 -->
+  <div id="correctionSection" class="selection-section">
+
+    <button class="back-btn" onclick="goBack('resultsSection')">
+      ← العودة إلى النتائج
+    </button>
+
+    <h3 class="section-title">📋 التصحيح المفصل</h3>
+
+    <div id="correctionContent" class="correction-content">
+      <!-- Correction dynamically loaded -->
+    </div>
+
+    <div class="correction-actions">
+
+      <button class="btn-primary" onclick="restartQuiz()">
+        🔄 إعادة الاختبار
+      </button>
+
+      <button class="btn-secondary" onclick="goToSelection()">
+        🏠 اختبار جديد
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Footer -->
+<footer>
+
+  <div class="footer-content">
+
+    <div class="footer-section">
+      <h4>🌟 LumiLearn</h4>
+
+      <p>
+        منصة تعليمية تساعد الأطفال على التعلم بطريقة ممتعة.
+      </p>
+    </div>
+
+    <div class="footer-section">
+      <h4>خريطة الموقع</h4>
+
+      <ul>
+        <li><a href="#">🏠 الرئيسية</a></li>
+        <li><a href="#">🎧 الكتب الصوتية</a></li>
+        <li><a href="#">📚 المقالات</a></li>
+        <li><a href="#">🎓 البرنامج الدراسي</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h4>الموارد</h4>
+
+      <ul>
+        <li><a href="#">🌐 ويكيبيديا</a></li>
+        <li><a href="#">🧠 الاختبارات</a></li>
+        <li><a href="#">💡 حول المنصة</a></li>
+        <li><a href="#">📩 اتصل بنا</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h4>اللغات</h4>
+
+      <ul>
+        <li>🇫🇷 الفرنسية</li>
+        <li>🇬🇧 الإنجليزية</li>
+        <li>🇸🇦 العربية</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2025 LumiLearn | مشروع IEEE ENSIT CS × SIGHT Group 🌟</p>
+  </div>
+
+</footer>
+
+<script src="api.js"></script>
+<script src="auth.js"></script>
+<script src="quiz.js"></script>
+<script src="navbar.js"></script>
+
+<script>
+  initNavbar('ar')
+</script>
+
+</body>
+</html>
