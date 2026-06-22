@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LumiLearn : Livres Audio </title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styleSIGHT.css" />
+</head>
+  <style>
+    /* --- Page-specific Enhancements (keeps your theme) --- */
+    .wiki-card p {
+      color: #555;
+      font-size: 0.95em;
+      margin-bottom: 15px;
+      line-height: 1.6;
+    }
+
+    .wiki-card a {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+      color: white;
+      text-decoration: none;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .wiki-card a:hover {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 850px) {
+      .resources-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .resources-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+    }
+  </style>
+<body>
+  <div id="navbar-placeholder"></div>
+  
+<div class="container">
+    <div class="home-intro">
+      <h2>🌐 Sujets Wikipédia Éducatifs</h2>
+      <p class="section-subtitle">Découvre et apprends grâce à ces sujets passionnants tirés de Wikipédia.</p>
+    </div>
+
+    <div id="wikiGrid" class="resources-grid">
+      <!-- Cards will be generated dynamically -->
+    </div>
+  </div>
+   <footer>
+    <div class="footer-content">
+      <!-- About Section -->
+      <div class="footer-section">
+        <h4>🌟 LumiLearn</h4>
+        <p>Une plateforme éducative pour aider les enfants à apprendre en s'amusant.</p>
+      </div>
+      
+      <!-- Sitemap Section 1 -->
+      <div class="footer-section">
+        <h4>Plan du Site</h4>
+        <ul>
+          <li><a href="#home">🏠 Accueil</a></li>
+          <li><a href="#audio">🎧 Livres Audio</a></li>
+          <li><a href="#articles">📚 Articles</a></li>
+          <li><a href="#curriculum">🎓 Programme</a></li>
+        </ul>
+      </div>
+      
+      <!-- Sitemap Section 2 -->
+      <div class="footer-section">
+        <h4>Ressources</h4>
+        <ul>
+          <li><a href="#wikipedia">🌐 Wikipedia</a></li>
+          <li><a href="#quiz">🧠 Quiz</a></li>
+          <li><a href="#about">💡 À Propos</a></li>
+          <li><a href="#contact">📩 Contact</a></li>
+        </ul>
+      </div>
+      
+      <!-- Languages Section -->
+      <div class="footer-section">
+        <h4>Langues</h4>
+        <ul>
+          <li>🇫🇷 Français</li>
+          <li>🇬🇧 English</li>
+          <li>🇸🇦 العربية</li>
+        </ul>
+      </div>
+    </div>
+    
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <p>© 2025 LumiLearn | Projet IEEE ENSIT CS × SIGHT Group 🌟</p>
+    </div>
+  </footer> 
+  <script>
+    // === Suggested Wikipedia Topics ===
+    const wikiTopics = [
+      { title: "Système solaire", desc: "Le système solaire est composé du Soleil et des corps célestes gravitant autour de lui.", link: "https://fr.wikipedia.org/wiki/Syst%C3%A8me_solaire" },
+      { title: "Photosynthèse", desc: "La photosynthèse est un processus par lequel les plantes transforment la lumière en énergie chimique.", link: "https://fr.wikipedia.org/wiki/Photosynth%C3%A8se" },
+      { title: "Volcans", desc: "Un volcan est une montagne formée par l’éruption du magma depuis l’intérieur de la Terre.", link: "https://fr.wikipedia.org/wiki/Volcan" },
+      { title: "L’eau", desc: "L’eau est une molécule essentielle à la vie, composée d’hydrogène et d’oxygène.", link: "https://fr.wikipedia.org/wiki/Eau" },
+      { title: "La Terre", desc: "La Terre est la troisième planète du système solaire et la seule connue pour abriter la vie.", link: "https://fr.wikipedia.org/wiki/Terre" },
+      { title: "Les animaux", desc: "Les animaux sont des êtres vivants capables de mouvement et de réactions complexes.", link: "https://fr.wikipedia.org/wiki/Animal" },
+      { title: "L’électricité", desc: "L’électricité est un phénomène lié au déplacement de charges électriques dans la matière.", link: "https://fr.wikipedia.org/wiki/%C3%89lectricit%C3%A9" },
+      { title: "Les plantes", desc: "Les plantes produisent leur propre nourriture grâce à la photosynthèse et purifient l’air.", link: "https://fr.wikipedia.org/wiki/Plante" },
+      { title: "L’espace", desc: "L’espace est l’étendue où se trouvent les étoiles, planètes et galaxies de l’univers.", link: "https://fr.wikipedia.org/wiki/Espace" }
+    ];
+
+    const grid = document.getElementById("wikiGrid");
+
+    function renderWiki(list) {
+      grid.innerHTML = list.map(topic => `
+        <div class="resource-card wiki-card">
+          <h3>${topic.title}</h3>
+          <p>${topic.desc}</p>
+          <a href="${topic.link}" target="_blank" rel="noopener noreferrer">En savoir plus</a>
+        </div>
+      `).join('');
+    }
+
+    renderWiki(wikiTopics);
+  </script>
+  <script src="navbar.js"></script>
+  <script>initNavbar('fr')</script>

@@ -1,0 +1,318 @@
+/* ===== GOOGLE FONTS ===== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
+
+/* ===== VARIABLES ===== */
+:root {
+    --primary-pink: #FF91AF;
+    --primary-yellow: #FFD36E;
+    --accent-mint: #A8E6CF;
+    --accent-purple: #B99BFF;
+    --accent-cyan: #6ED3CF;
+    --text-dark: #333333;
+    --bg-soft: #FFF9F1;
+    --white: #ffffff;
+    --shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== GLOBAL STYLES ===== */
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-soft);
+    color: var(--text-dark);
+}
+
+/* ===== HEADER (LumiLearn Match) ===== */
+.main-header {
+    background: linear-gradient(90deg, var(--primary-pink), var(--primary-yellow));
+    padding: 15px 40px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.main-header h1 {
+    color: white;
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 800;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.desktop-nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Return Button & Nav Links */
+.home-btn {
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    padding: 8px 15px;
+    border-radius: 50px;
+    transition: background 0.3s;
+}
+
+.home-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.game-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Nav Action Buttons */
+.nav-action-btn {
+    background: white;
+    color: var(--primary-pink);
+    border: none;
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+}
+
+.nav-action-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.nav-action-btn.reset {
+    background: var(--text-dark);
+    color: white;
+}
+
+/* ===== MAIN LAYOUT ===== */
+main {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Sides */
+.left_side, .right_side {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 30px;
+    box-shadow: var(--shadow);
+}
+
+.left_side { flex: 3; min-width: 300px; }
+.right_side { flex: 2; min-width: 280px; }
+
+/* Boxes */
+#target_box, #score_box {
+    font-size: 1.2rem;
+    text-align: center;
+    padding: 20px;
+    border-radius: 20px;
+    background: var(--bg-soft);
+    border: 3px dashed var(--primary-pink);
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+#target, #score {
+    font-size: 2.2rem;
+    color: var(--primary-pink);
+    display: block;
+}
+
+/* Game Elements */
+#expression {
+    background: #fdfdfd;
+    padding: 15px;
+    border-radius: 15px;
+    border: 2px solid #eee;
+    min-height: 60px;
+    font-size: 1.5rem;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-purple);
+    font-weight: 600;
+}
+
+/* Buttons Styling */
+#numbers_container .num {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 50%;
+    border: 3px solid var(--accent-cyan);
+    cursor: pointer;
+    font-weight: 800;
+    box-shadow: 0 4px 0 var(--accent-cyan);
+    transition: all 0.2s;
+}
+
+#numbers_container .num:hover {
+    transform: translateY(-3px);
+    background: var(--accent-cyan);
+    color: white;
+}
+
+#operators_container button {
+    background: white;
+    border: 3px solid var(--primary-yellow);
+    font-size: 1.5rem;
+    border-radius: 15px;
+    width: 55px;
+    height: 55px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 var(--primary-yellow);
+}
+
+#game_actions button {
+    background: var(--accent-purple);
+    border: none;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#game_actions button#undo { background: var(--accent-cyan); }
+#game_actions button#restart { background: var(--primary-pink); }
+
+/* History & Info */
+#bonus_info {
+    margin-top: 25px;
+    padding: 15px;
+    text-align: center;
+    border-radius: 20px;
+    background: var(--accent-mint);
+    font-weight: 700;
+}
+
+#history {
+    background: #fafafa;
+    border-radius: 20px;
+    border: 2px dashed #ddd;
+    padding: 15px;
+    min-height: 150px;
+}
+
+@media (max-width: 768px) {
+    .header-container { flex-direction: column; gap: 15px; }
+    main { padding: 20px; }
+}
+.game-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* This makes the Select and the Buttons look exactly the same */
+.top-ctrl {
+    height: 40px;
+    padding: 0 20px;
+    border-radius: 50px;
+    border: 2px solid transparent;
+    background-color: var(--white);
+    color: var(--primary-pink);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* Hover effect for all top controls */
+.top-ctrl:hover {
+    transform: translateY(-2px);
+    background-color: var(--text-dark);
+    color: var(--white);
+}
+
+/* Reset specific logic for the dropdown arrow */
+select.top-ctrl {
+    appearance: none; /* Removes default browser styling */
+    -webkit-appearance: none;
+    padding-right: 15px;
+    text-align: center;
+}
+
+/* ===== NUMBERS NEXT TO EACH OTHER ===== */
+#numbers_container {
+    display: flex;
+    flex-direction: row; /* Forces horizontal alignment */
+    flex-wrap: wrap;     /* Allows wrapping if screen is too small */
+    gap: 12px;           /* Space between numbers */
+    justify-content: center; /* Centers the row of numbers */
+    margin-bottom: 30px;
+    padding: 10px;
+}
+
+#numbers_container .num {
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--white);
+    border-radius: 50%; /* Perfect circle */
+    border: 3px solid var(--accent-cyan);
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 0 var(--accent-cyan);
+    user-select: none;
+}
+
+#numbers_container .num:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 0 var(--accent-cyan);
+    background: var(--accent-cyan);
+    color: white;
+}
+
+/* ===== OPERATORS LAYOUT ===== */
+#operators_container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+/* Adjust main layout to be more centered */
+main {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+    padding: 40px 20px;
+}

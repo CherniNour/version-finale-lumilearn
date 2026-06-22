@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LumiLearn - تسجيل الدخول</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-primary: #FF91AF;
+      --color-secondary: #FFD36E;
+      --color-accent: #6ED3CF;
+      --color-text: #333;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Tajawal', 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #FFE5F1 0%, #E0F7FF 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
+    }
+    .modal-overlay.active { display: flex; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+    .auth-container {
+      background: white;
+      border-radius: 30px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      width: 90%;
+      max-width: 420px;
+      padding: 35px 30px;
+      position: relative;
+      animation: slideUp 0.4s ease;
+      direction: rtl;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: none;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: #999;
+      transition: all 0.3s;
+      width: 35px; height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+    .close-btn:hover { background: #f0f0f0; color: var(--color-primary); transform: rotate(90deg); }
+
+    .auth-header { text-align: center; margin-bottom: 30px; }
+    .auth-icon { font-size: 60px; margin-bottom: 15px; animation: bounce 1s ease infinite; display: block; }
+    .auth-header h2 { font-size: 2em; color: var(--color-primary); margin-bottom: 10px; font-weight: 800; }
+    .auth-header p { color: #666; font-size: 0.95em; }
+
+    .auth-form { display: flex; flex-direction: column; gap: 20px; }
+    .form-group { display: flex; flex-direction: column; gap: 8px; }
+    .form-group label { font-weight: 600; color: var(--color-text); font-size: 0.95em; }
+    .form-group input,
+    .form-group select {
+      padding: 15px 20px;
+      border: 2px solid #e0e0e0;
+      border-radius: 15px;
+      font-size: 1em;
+      font-family: 'Tajawal', sans-serif;
+      transition: all 0.3s;
+      outline: none;
+      direction: ltr;
+      text-align: left;
+    }
+    .form-group input:focus,
+    .form-group select:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(255,145,175,0.1); }
+
+    .password-container { position: relative; }
+    .toggle-password {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 20px;
+      color: #999;
+      transition: color 0.3s;
+    }
+    .toggle-password:hover { color: var(--color-primary); }
+
+    .error-message { color: #ff4444; font-size: 0.85em; margin-top: 5px; display: none; }
+    .error-message.show { display: block; }
+
+    .remember-forgot { display: flex; justify-content: space-between; align-items: center; font-size: 0.9em; }
+    .remember-forgot label { display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--color-text); }
+    .remember-forgot input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
+    .remember-forgot a { color: var(--color-primary); text-decoration: none; font-weight: 600; transition: color 0.3s; }
+    .remember-forgot a:hover { color: var(--color-accent); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      color: white; border: none;
+      padding: 16px;
+      border-radius: 15px;
+      font-size: 1.1em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Tajawal', sans-serif;
+      box-shadow: 0 5px 20px rgba(255,145,175,0.3);
+      width: 100%;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,145,175,0.4); }
+
+    .divider { display: flex; align-items: center; text-align: center; margin: 25px 0; color: #999; font-size: 0.9em; }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #e0e0e0; }
+    .divider span { padding: 0 15px; }
+
+    .btn-google {
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      background: white;
+      border: 2px solid #e0e0e0;
+      padding: 14px;
+      border-radius: 15px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Tajawal', sans-serif;
+      color: var(--color-text);
+      width: 100%;
+    }
+    .btn-google:hover { border-color: var(--color-primary); box-shadow: 0 5px 15px rgba(0,0,0,0.1); transform: translateY(-2px); }
+    .btn-google svg { width: 22px; height: 22px; }
+
+    .switch-form { text-align: center; margin-top: 20px; font-size: 0.95em; color: #666; }
+    .switch-form a { color: var(--color-primary); font-weight: 700; cursor: pointer; text-decoration: none; }
+    .switch-form a:hover { color: var(--color-accent); }
+
+    .auth-form-container { display: none; }
+    .auth-form-container.active { display: block; }
+
+    .success-message { display: none; text-align: center; padding: 20px 0; }
+    .success-message.show { display: block; }
+    .success-icon { font-size: 80px; margin-bottom: 20px; animation: bounce 1s ease infinite; display: block; }
+    .success-message h3 { font-size: 1.8em; color: var(--color-primary); margin-bottom: 15px; font-weight: 800; }
+    .success-message p { color: #666; margin-bottom: 25px; font-size: 1em; line-height: 1.6; }
+  </style>
+</head>
+
+<body>
+  <!-- Auth Modal -->
+  <div class="modal-overlay active" id="authModal">
+    <div class="auth-container">
+      <button class="close-btn" onclick="closeModal()">✕</button>
+
+      <!-- Login Form -->
+      <div id="loginForm" class="auth-form-container active">
+        <div class="auth-header">
+          <span class="auth-icon">👋</span>
+          <h2>مرحباً بك!</h2>
+          <p>سجّل دخولك لمتابعة مغامرتك التعليمية</p>
+        </div>
+
+        <form class="auth-form" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label for="loginEmail">📧 البريد الإلكتروني</label>
+            <input type="email" id="loginEmail" placeholder="exemple@email.com" required />
+            <span class="error-message" id="loginEmailError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="loginPassword">🔒 كلمة المرور</label>
+            <div class="password-container">
+              <input type="password" id="loginPassword" placeholder="••••••••" required />
+              <button type="button" class="toggle-password" onclick="togglePassword('loginPassword')">👁️</button>
+            </div>
+            <span class="error-message" id="loginPasswordError"></span>
+          </div>
+
+          <div class="remember-forgot">
+            <label>
+              <input type="checkbox" id="rememberMe" />
+              تذكّرني
+            </label>
+            <a onclick="showForgotPassword()">نسيت كلمة المرور؟</a>
+          </div>
+
+          <button type="submit" class="btn-primary">تسجيل الدخول 🚀</button>
+        </form>
+
+        <div class="divider"><span>أو</span></div>
+
+        <button class="btn-google" onclick="loginWithGoogle()">
+          <svg viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
+          الدخول عبر Google
+        </button>
+
+        <div class="switch-form">
+          ليس لديك حساب؟ <a onclick="showSignup()">إنشاء حساب</a>
+        </div>
+      </div>
+
+      <!-- Signup Form -->
+      <div id="signupForm" class="auth-form-container">
+        <div class="auth-header">
+          <span class="auth-icon">🎉</span>
+          <h2>إنشاء حساب</h2>
+          <p>انضم إلى مغامرة LumiLearn!</p>
+        </div>
+
+        <form class="auth-form" onsubmit="handleSignup(event)">
+          <div class="form-group">
+            <label for="signupName">👤 الاسم</label>
+            <input type="text" id="signupName" placeholder="اسمك" required minlength="2" />
+            <span class="error-message" id="signupNameError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="signupEmail">📧 البريد الإلكتروني</label>
+            <input type="email" id="signupEmail" placeholder="exemple@email.com" required />
+            <span class="error-message" id="signupEmailError"></span>
+          </div>
+
+          <!-- Sélecteur de classe — important pour la redirection -->
+          <div class="form-group">
+            <label for="signupClasse">🏫 الصف الدراسي</label>
+            <select id="signupClasse" required>
+              <option value="">-- اختر صفك --</option>
+              <option value="1">السنة الأولى</option>
+              <option value="2">السنة الثانية</option>
+              <option value="3">السنة الثالثة</option>
+              <option value="4">السنة الرابعة</option>
+              <option value="5">السنة الخامسة</option>
+              <option value="6">السنة السادسة</option>
+            </select>
+          </div>
+
+          <!-- Langue préférée : page arabe → ar par défaut -->
+          <input type="hidden" id="signupLangue" value="ar">
+
+          <div class="form-group">
+            <label for="signupPassword">🔒 كلمة المرور</label>
+            <div class="password-container">
+              <input type="password" id="signupPassword" placeholder="••••••••" required minlength="6" />
+              <button type="button" class="toggle-password" onclick="togglePassword('signupPassword')">👁️</button>
+            </div>
+            <span class="error-message" id="signupPasswordError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">🔒 تأكيد كلمة المرور</label>
+            <div class="password-container">
+              <input type="password" id="confirmPassword" placeholder="••••••••" required />
+              <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword')">👁️</button>
+            </div>
+            <span class="error-message" id="confirmPasswordError"></span>
+          </div>
+
+          <button type="submit" class="btn-primary">إنشاء حسابي 🎈</button>
+        </form>
+
+        <div class="divider"><span>أو</span></div>
+
+        <button class="btn-google" onclick="signupWithGoogle()">
+          <svg viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
+          التسجيل عبر Google
+        </button>
+
+        <div class="switch-form">
+          لديك حساب بالفعل؟ <a onclick="showLogin()">تسجيل الدخول</a>
+        </div>
+      </div>
+
+      <!-- Success Message -->
+      <div id="successMessage" class="success-message">
+        <span class="success-icon">🎉</span>
+        <h3>مرحباً بك في LumiLearn!</h3>
+        <p id="successText">تم تسجيل الدخول بنجاح!</p>
+        <button class="btn-primary" onclick="redirectAfterLogin()">ابدأ المغامرة 🚀</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- api.js doit être chargé avant auth.js -->
+  <script src="api.js"></script>
+  <script src="auth.js"></script>
+
+  <script>
+    function openModal() {
+      document.getElementById('authModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Surcharge de closeModal (auth.js) pour rediriger vers la page d'accueil arabe
+    function closeModal() {
+      document.getElementById('authModal').classList.remove('active');
+      document.body.style.overflow = 'auto';
+      setTimeout(() => { window.location.href = 'indexSIGHT_ar.html'; }, 300);
+    }
+
+    // Surcharge de showSuccess (auth.js) avec le texte arabe
+    function showSuccess(name) {
+      document.getElementById('loginForm').classList.remove('active');
+      document.getElementById('signupForm').classList.remove('active');
+      document.getElementById('successMessage').classList.add('show');
+      document.getElementById('successText').textContent = `مرحباً ${name}! أنت الآن متصل 🎈`;
+    }
+
+    // ── handleLogin et handleSignup sont désormais fournis par auth.js  ──
+    // ── (appels réels au backend via api.js — l'ancien code localStorage ──
+    // ── a été supprimé pour éviter tout conflit) ──────────────────────────
+
+    function loginWithGoogle() { alert('🔗 الدخول عبر Google\n\nهذه الميزة تتطلب إعداد OAuth2 على الخادم.\n\nاستخدم نموذج تسجيل الدخول في الوقت الحالي! 😊'); }
+    function signupWithGoogle() { alert('🔗 التسجيل عبر Google\n\nهذه الميزة تتطلب إعداد OAuth2 على الخادم.\n\nاستخدم نموذج التسجيل في الوقت الحالي! 😊'); }
+    function showForgotPassword() { alert('📧 نسيت كلمة المرور؟\n\nسيتم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني.\n\nهذه الميزة ستكون متاحة قريباً! 💌'); }
+
+    // Surcharge de redirectAfterLogin (auth.js) avec la valeur par défaut arabe
+    function redirectAfterLogin() {
+      const returnUrl = new URLSearchParams(window.location.search).get('return') || 'indexSIGHT_ar.html';
+      window.location.href = returnUrl;
+    }
+
+    window.addEventListener('load', () => {
+      if (window.location.pathname.includes('login_ar.html')) openModal();
+    });
+
+    document.getElementById('authModal').addEventListener('click', (e) => {
+      if (e.target.id === 'authModal') closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+</body>
+</html>

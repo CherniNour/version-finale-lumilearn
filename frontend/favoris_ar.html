@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مفضلتي - LumiLearn</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styleSIGHT.css" />
+  <style>
+    body { font-family: 'Tajawal', 'Poppins', sans-serif; }
+    .favorites-hero { background: linear-gradient(135deg, #FFE5F1 0%, #E0F7FF 100%); padding: 60px 5%; text-align: center; }
+    .favorites-hero h2 { font-size: 2.5em; color: #FF91AF; margin-bottom: 15px; font-weight: 800; }
+    .favorites-hero p { font-size: 1.2em; color: #666; }
+    .favorites-container { max-width: 1200px; margin: 60px auto; padding: 0 5%; }
+    .favorites-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 50px; }
+    .stat-box { background: linear-gradient(135deg, #FFE5F1, #E0F7FF); padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+    .stat-box .icon { font-size: 3em; margin-bottom: 15px; }
+    .stat-box .number { font-size: 2.5em; font-weight: 800; color: #FF91AF; margin-bottom: 5px; }
+    .stat-box .label { font-size: 1.1em; color: #666; font-weight: 600; }
+    .favorites-section { margin-bottom: 50px; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 3px solid #FF91AF; }
+    .section-header h3 { font-size: 2em; color: #FF91AF; font-weight: 800; margin: 0; }
+    .clear-section-btn { background: linear-gradient(135deg, #FFB6B9, #FF6B6B); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: 'Tajawal', sans-serif; }
+    .clear-section-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,107,107,0.3); }
+    .favorites-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+    .favorite-item { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); transition: all 0.3s; border-right: 5px solid #FF91AF; position: relative; direction: rtl; text-align: right; }
+    .favorite-item:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+    .favorite-item h4 { font-size: 1.3em; color: #333; margin-bottom: 10px; font-weight: 700; padding-left: 50px; }
+    .favorite-item .date { font-size: 0.85em; color: #999; margin-bottom: 15px; }
+    .favorite-item .actions { display: flex; gap: 10px; }
+    .btn-view, .btn-remove { padding: 10px 20px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: 'Tajawal', sans-serif; font-size: 0.95em; }
+    .btn-view { background: linear-gradient(135deg, #FFD36E, #FF91AF); color: white; flex: 1; }
+    .btn-view:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,145,175,0.3); }
+    .btn-remove { background: white; color: #FF6B6B; border: 2px solid #FF6B6B; width: 45px; padding: 10px; }
+    .btn-remove:hover { background: #FF6B6B; color: white; }
+    .empty-state { text-align: center; padding: 80px 20px; background: linear-gradient(135deg, #FFF8F0, #FFE5F1); border-radius: 20px; margin: 40px 0; }
+    .empty-state .icon { font-size: 5em; margin-bottom: 20px; animation: float 3s ease-in-out infinite; }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+    .empty-state h3 { font-size: 2em; color: #FF91AF; margin-bottom: 15px; font-weight: 800; }
+    .empty-state p { font-size: 1.2em; color: #666; margin-bottom: 30px; }
+    .btn-explore { display: inline-block; background: linear-gradient(135deg, #FFD36E, #FF91AF); color: white; padding: 15px 40px; border-radius: 15px; text-decoration: none; font-weight: 700; font-size: 1.1em; transition: all 0.3s; }
+    .btn-explore:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(255,145,175,0.4); }
+    .clear-all-btn { display: block; width: fit-content; margin: 50px auto; background: linear-gradient(135deg, #FFB6B9, #FF6B6B); color: white; border: none; padding: 15px 40px; border-radius: 15px; font-weight: 700; font-size: 1.1em; cursor: pointer; transition: all 0.3s; font-family: 'Tajawal', sans-serif; }
+    .clear-all-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(255,107,107,0.4); }
+    @media (max-width: 768px) { .favorites-grid { grid-template-columns: 1fr; } .favorites-stats { grid-template-columns: repeat(2, 1fr); } .section-header { flex-direction: column; gap: 15px; align-items: flex-start; } }
+  </style>
+</head>
+
+<body>
+  <div id="navbar-placeholder"></div>
+
+  <section class="favorites-hero">
+    <div class="hero-content">
+      <h2>مفضلتي ❤️</h2>
+      <p>كل المحتويات التي حفظتها في مكان واحد!</p>
+    </div>
+  </section>
+
+  <div class="favorites-container">
+    <div class="favorites-stats">
+      <div class="stat-box"><div class="icon">🎧</div><div class="number" id="audioCount">0</div><div class="label">كتب صوتية</div></div>
+      <div class="stat-box"><div class="icon">📚</div><div class="number" id="articlesCount">0</div><div class="label">مقالات</div></div>
+      <div class="stat-box"><div class="icon">🌐</div><div class="number" id="wikiCount">0</div><div class="label">ويكيبيديا</div></div>
+      <div class="stat-box"><div class="icon">❤️</div><div class="number" id="totalCount">0</div><div class="label">المجموع</div></div>
+    </div>
+    <div id="favoritesContent"></div>
+    <button class="clear-all-btn" id="clearAllBtn" style="display: none;">🗑️ مسح جميع المفضلة</button>
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section"><h4>🌟 LumiLearn</h4><p>منصة تعليمية تساعد الأطفال على التعلم بطريقة ممتعة.</p></div>
+      <div class="footer-section"><h4>خريطة الموقع</h4><ul>
+        <li><a href="indexSIGHT_ar.html">🏠 الرئيسية</a></li>
+        <li><a href="audio_ar.html">🎧 كتب صوتية</a></li>
+        <li><a href="articles_ar.html">📚 مقالات</a></li>
+        <li><a href="curriculum_ar.html">🎓 البرنامج</a></li>
+      </ul></div>
+      <div class="footer-section"><h4>الموارد</h4><ul>
+        <li><a href="apropos_ar.html">💡 من نحن</a></li>
+        <li><a href="contact_ar.html">📩 تواصل معنا</a></li>
+      </ul></div>
+      <div class="footer-section"><h4>اللغات</h4><ul>
+        <li>🇸🇦 العربية</li><li>🇫🇷 الفرنسية</li><li>🇬🇧 الإنجليزية</li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom"><p>© 2025 LumiLearn | مشروع IEEE ENSIT CS × SIGHT Group 🌟</p></div>
+  </footer>
+
+  <script>
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mobileNav = document.getElementById('mobile-nav');
+    menuToggle.addEventListener('click', () => mobileNav.classList.toggle('is-open'));
+
+    const langSelect = document.getElementById('langSelect');
+    const langSelectMobile = document.getElementById('langSelectMobile');
+    function changeLanguage(lang) {
+      if (lang === 'fr') window.location.href = 'favoris.html';
+      else if (lang === 'en') window.location.href = 'favoris_en.html';
+    }
+    langSelect.addEventListener('change', (e) => { changeLanguage(e.target.value); langSelectMobile.value = e.target.value; });
+    langSelectMobile.addEventListener('change', (e) => { changeLanguage(e.target.value); langSelect.value = e.target.value; });
+
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('ar-TN', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+
+    function displayFavorites() {
+      if (typeof favoritesManager === 'undefined') return;
+      const allFavorites = favoritesManager.getAllFavorites();
+      const content = document.getElementById('favoritesContent');
+      document.getElementById('audioCount').textContent = allFavorites.audio?.length || 0;
+      document.getElementById('articlesCount').textContent = allFavorites.articles?.length || 0;
+      document.getElementById('wikiCount').textContent = allFavorites.wikipedia?.length || 0;
+      const total = (allFavorites.audio?.length || 0) + (allFavorites.articles?.length || 0) + (allFavorites.wikipedia?.length || 0) + (allFavorites.quiz?.length || 0);
+      document.getElementById('totalCount').textContent = total;
+
+      if (total === 0) {
+        content.innerHTML = `<div class="empty-state"><div class="icon">💔</div><h3>لا توجد مفضلة حتى الآن</h3><p>ابدأ باستكشاف المحتوى وأضف ما يعجبك!</p><a href="indexSIGHT_ar.html" class="btn-explore">🚀 استكشف LumiLearn</a></div>`;
+        document.getElementById('clearAllBtn').style.display = 'none';
+        return;
+      }
+      document.getElementById('clearAllBtn').style.display = 'block';
+      let html = '';
+      const categories = {
+        audio: { title: '🎧 كتب صوتية', page: 'audio_ar.html' },
+        articles: { title: '📚 مقالات', page: 'articles_ar.html' },
+        wikipedia: { title: '🌐 ويكيبيديا', page: 'wikipedia_ar.html' },
+        quiz: { title: '🧠 اختبارات', page: 'quiz_ar.html' }
+      };
+      Object.entries(categories).forEach(([type, config]) => {
+        const items = allFavorites[type] || [];
+        if (items.length > 0) {
+          html += `<div class="favorites-section"><div class="section-header"><h3>${config.title} (${items.length})</h3><button class="clear-section-btn" onclick="clearSection('${type}')">🗑️ مسح هذا القسم</button></div><div class="favorites-grid">`;
+          items.forEach(item => {
+            html += `<div class="favorite-item"><h4>${item.title}</h4><p class="date">📅 أُضيف في ${formatDate(item.addedAt)}</p><div class="actions"><button class="btn-view" onclick="window.location.href='${item.url}'">👀 عرض</button><button class="btn-remove" onclick="removeFavorite('${type}', '${item.id}')" title="حذف">🗑️</button></div></div>`;
+          });
+          html += `</div></div>`;
+        }
+      });
+      content.innerHTML = html;
+    }
+
+    function removeFavorite(type, itemId) {
+      if (confirm('هل أنت متأكد من حذف هذا العنصر من المفضلة؟ 🗑️')) {
+        if (typeof favoritesManager !== 'undefined') { favoritesManager.removeFavorite(type, itemId); displayFavorites(); }
+      }
+    }
+
+    function clearSection(type) {
+      const typeNames = { audio: 'كتب صوتية', articles: 'مقالات', wikipedia: 'ويكيبيديا', quiz: 'اختبارات' };
+      if (confirm(`هل أنت متأكد من مسح جميع مفضلة "${typeNames[type]}"؟`)) {
+        if (typeof favoritesManager !== 'undefined') {
+          favoritesManager.favorites[type] = [];
+          favoritesManager.saveFavorites();
+          favoritesManager.showNotification(`تم مسح قسم "${typeNames[type]}"`, 'success');
+          displayFavorites();
+        }
+      }
+    }
+
+    document.getElementById('clearAllBtn').addEventListener('click', () => {
+      if (typeof favoritesManager !== 'undefined') { if (favoritesManager.clearAllFavorites()) displayFavorites(); }
+    });
+
+    window.addEventListener('load', () => { setTimeout(displayFavorites, 500); });
+  </script>
+  <script src="auth.js"></script>
+  <script src="favorites.js"></script>
+  <script src="navbar.js"></script>
+<script>initNavbar('ar')</script> 
+</body>
+</html>

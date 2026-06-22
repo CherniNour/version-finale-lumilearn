@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LumiLearn : الكتب الصوتية</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styleSIGHT.css" />
+  <link rel="stylesheet" href="search-styles.css" />
+  <style>
+    body { font-family: 'Tajawal', 'Poppins', sans-serif; }
+    .resource-card { direction: rtl; text-align: right; }
+    .topics-list li { border-right: 4px solid var(--color-primary); border-left: none; }
+    .topics-list li:hover { transform: translateX(-5px); }
+  </style>
+</head>
+
+<body>
+  <div id="navbar-placeholder"></div>
+  <section class="search-section">
+    <div class="search-content">
+      <h3>ابحث عن كتاب صوتي 🎧</h3>
+      <div class="search-bar">
+        <input id="searchInput" type="text" placeholder="اكتب عنوان الكتاب...">
+        <button id="searchButton">بحث 🔍</button>
+      </div>
+    </div>
+    <div class="search-illustration">
+      <div class="illustration-placeholder">🎵</div>
+    </div>
+    <div id="searchResults"></div>
+  </section>
+
+  <div class="container">
+    <div class="home-intro">
+      <h2>كتب صوتية مقترحة 🎧</h2>
+      <p class="section-subtitle" id="subtitleAudio">استمع إلى قصص ممتعة وتعليمية خصيصاً لك!</p>
+    </div>
+    <!-- Indicateur de chargement -->
+    <div id="loadingIndicator" style="text-align:center;padding:40px;font-size:1.2em;">
+      ⏳ جاري تحميل الكتب الصوتية...
+    </div>
+    <div id="audioGrid" class="resources-grid"></div>
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>🌟 LumiLearn</h4>
+        <p>منصة تعليمية تساعد الأطفال على التعلم بطريقة ممتعة.</p>
+      </div>
+      <div class="footer-section">
+        <h4>خريطة الموقع</h4>
+        <ul>
+          <li><a href="indexSIGHT_ar.html">🏠 الرئيسية</a></li>
+          <li><a href="audio_ar.html">🎧 كتب صوتية</a></li>
+          <li><a href="articles_ar.html">📚 مقالات</a></li>
+          <li><a href="curriculum_ar.html">🎓 البرنامج</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>الموارد</h4>
+        <ul>
+          <li><a href="wikipedia_ar.html">🌐 ويكيبيديا</a></li>
+          <li><a href="quiz_ar.html">🧠 اختبارات</a></li>
+          <li><a href="apropos_ar.html">💡 من نحن</a></li>
+          <li><a href="contact_ar.html">📩 تواصل معنا</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>اللغات</h4>
+        <ul>
+          <li>🇸🇦 العربية</li>
+          <li>🇫🇷 الفرنسية</li>
+          <li>🇬🇧 الإنجليزية</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 LumiLearn | مشروع IEEE ENSIT CS × SIGHT Group 🌟</p>
+    </div>
+  </footer>
+
+  <!-- api.js doit être chargé avant auth.js et avant le script ci-dessous -->
+  <script src="api.js"></script>
+  <script src="auth.js"></script>
+
+  <script>
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mobileNav = document.getElementById('mobile-nav');
+    menuToggle.addEventListener('click', () => mobileNav.classList.toggle('is-open'));
+
+    const langSelect = document.getElementById('langSelect');
+    const langSelectMobile = document.getElementById('langSelectMobile');
+    function changeLanguage(lang) {
+      if (lang === 'fr') window.location.href = 'audio.html';
+      else if (lang === 'en') window.location.href = 'audio_en.html';
+    }
+    langSelect.addEventListener('change', (e) => { changeLanguage(e.target.value); langSelectMobile.value = e.target.value; });
+    langSelectMobile.addEventListener('change', (e) => { changeLanguage(e.target.value); langSelect.value = e.target.value; });
+
+    // ── Référence locale aux audios chargés (pour la recherche) ──
+    let tousLesAudios = [];
+
+    // ── Afficher les cartes ───────────────────────────────────────
+    function renderAudios(liste) {
+      const grid = document.getElementById('audioGrid');
+      document.getElementById('loadingIndicator').style.display = 'none';
+
+      if (!liste || liste.length === 0) {
+        grid.innerHTML = '<p style="text-align:center;color:#666;">لم يتم العثور على أي كتاب صوتي.</p>';
+        return;
+      }
+
+      // Le backend sert les MP3 statiquement → URL complète
+      const BASE = 'http://localhost:5000/';
+
+      grid.innerHTML = liste.map(book => `
+        <div class="resource-card">
+          <div style="font-size:2.5em;margin-bottom:10px;">${book.emoji || '🎧'}</div>
+          <h3>${book.titre}</h3>
+          <p>${book.description}</p>
+          ${book.niveau > 0 ? `<span style="background:#FFE5F1;color:#FF91AF;
+            padding:3px 10px;border-radius:20px;font-size:0.8em;">
+            الصف ${book.niveau}</span>` : ''}
+          <audio controls src="${BASE}${book.fichier}"
+            style="margin-top:15px;width:100%;"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          </audio>
+          <p style="display:none;color:#f44336;font-size:0.85em;">
+            ⚠️ الملف الصوتي غير متوفر
+          </p>
+        </div>
+      `).join('');
+
+      setTimeout(() => { if (typeof addFavoriteButtonsToCards === 'function') addFavoriteButtonsToCards(); }, 500);
+    }
+
+    // ── Recherche locale (filtre sur les audios déjà chargés) ────
+    function searchAudio() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = tousLesAudios.filter(b =>
+        b.titre.toLowerCase().includes(q) ||
+        b.description.toLowerCase().includes(q)
+      );
+      renderAudios(filtered.length ? filtered : tousLesAudios);
+    }
+
+    document.getElementById('searchButton').addEventListener('click', searchAudio);
+    document.getElementById('searchInput').addEventListener('keyup', e => {
+      if (e.key === 'Enter') searchAudio();
+    });
+
+    // ── Charger les audios depuis le backend ──────────────────────
+    async function chargerAudios() {
+      try {
+        const user = getCurrentUser();
+
+        let data;
+        if (user) {
+          // Utilisateur connecté → audios adaptés à sa classe
+          document.getElementById('subtitleAudio').textContent =
+            `الكتب الصوتية الموصى بها للصف ${user.classe} 🎓`;
+          data = await apiAudiosParClasse(user.classe);
+        } else {
+          // Non connecté → tous les audios en arabe
+          data = await apiAudiosParLangue('ar');
+        }
+
+        if (data.success) {
+          tousLesAudios = data.audios;
+          renderAudios(tousLesAudios);
+        } else {
+          throw new Error(data.message);
+        }
+      } catch (err) {
+        console.error('خطأ في تحميل الكتب الصوتية :', err.message);
+        // Repli : afficher les audios locaux si le backend n'est pas disponible
+        document.getElementById('loadingIndicator').innerHTML =
+          '⚠️ الخادم غير متوفر — يتم عرض البيانات المحلية';
+        const fallback = [
+          { titre:'البذرة الصغيرة',           description:'كيف تصبح بذرة صغيرة شجرة عملاقة قوية.',          fichier:'Audio/THETINYSEED.mp3', emoji:'🌱', niveau:0 },
+          { titre:'يوم في المزرعة',            description:'اكتشف الحيوانات التي تعيش في المزرعة.',           fichier:'Audio/farm.mp3',         emoji:'🐄', niveau:1 },
+          { titre:'كيف تمسك قوس قزح',          description:'تعلم الألوان من خلال قصة بهيجة ومرحة.',           fichier:'Audio/Rainbow.mp3',      emoji:'🌈', niveau:1 },
+          { titre:'كوكب الأرض',                description:'استكشف عجائب كوكبنا الجميل!',                     fichier:'Audio/Earth.mp3',        emoji:'🌍', niveau:3 },
+          { titre:'أولى خطواتي في الرياضيات',  description:'العد يصبح ممتعاً للمتعلمين الصغار.',               fichier:'Audio/Math.mp3',          emoji:'🔢', niveau:1 },
+          { titre:'النجمة الشجاعة الصغيرة',    description:'قصة عن الشجاعة والصداقة.',                        fichier:'Audio/Star.mp3',          emoji:'⭐', niveau:0 }
+        ];
+        document.getElementById('loadingIndicator').style.display = 'none';
+        tousLesAudios = fallback;
+
+        // En fallback, les fichiers audio sont locaux (pas de préfixe BASE)
+        const grid = document.getElementById('audioGrid');
+        grid.innerHTML = fallback.map(book => `
+          <div class="resource-card">
+            <div style="font-size:2.5em;margin-bottom:10px;">${book.emoji}</div>
+            <h3>${book.titre}</h3>
+            <p>${book.description}</p>
+            <audio controls src="${book.fichier}" style="margin-top:15px;width:100%;"></audio>
+          </div>
+        `).join('');
+        setTimeout(() => { if (typeof addFavoriteButtonsToCards === 'function') addFavoriteButtonsToCards(); }, 500);
+      }
+    }
+
+    // Démarrer le chargement
+    chargerAudios();
+  </script>
+
+  <script src="favorites.js"></script>
+  <script src="search.js"></script>
+  <script src="navbar.js"></script>
+  <script>initNavbar('ar')</script>
+</body>
+</html>
