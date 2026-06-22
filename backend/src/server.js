@@ -34,10 +34,11 @@ app.use(session({
   resave:            false,
   saveUninitialized: false,
   cookie: {
+    secure: process.env.NODE_ENV === 'production', // HTTPS en prod
     maxAge:   1000 * 60 * 60 * 24,
     httpOnly: true,
     secure:   false,
-    sameSite: 'lax'
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
   }
 }));
 
@@ -49,7 +50,8 @@ app.use(cors({
     'http://127.0.0.1:3000',
     'http://localhost:3000',
     'http://localhost:5001',
-    'http://127.0.0.1:5001'
+    'http://127.0.0.1:5001','https://lumilearn.vercel.app',   // ← ton URL Vercel (à ajuster)
+    /\.vercel\.app$/                   // ← accepte tous les previews Vercel
   ],
   credentials: true
 }));

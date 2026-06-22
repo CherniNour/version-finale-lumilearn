@@ -5,8 +5,12 @@
 // Les pages HTML n'ont jamais besoin d'écrire fetch() elles-mêmes.
 // ═════════════════════════════════════════════════════════════
 
-const API = 'http://localhost:5001/api';
+//const API = 'http://localhost:5001/api';
 
+
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:5001'
+  : 'https://lumilearn-api.onrender.com';
 // ── Authentification ─────────────────────────────────────────
 
 async function apiInscription(nom, email, motDePasse, confirmer, classe, langue) {
