@@ -14,7 +14,7 @@ const API_BASE = window.location.hostname === 'localhost' || window.location.hos
 // ── Authentification ─────────────────────────────────────────
 
 async function apiInscription(nom, email, motDePasse, confirmer, classe, langue) {
-  const r = await fetch(`${API}/auth/inscription`, {
+  const r = await fetch(`${API_BASE}/api/auth/inscription`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',   // envoie le cookie de session
@@ -24,7 +24,7 @@ async function apiInscription(nom, email, motDePasse, confirmer, classe, langue)
 }
 
 async function apiConnexion(email, motDePasse) {
-  const r = await fetch(`${API}/auth/connexion`, {
+  const r = await fetch(`${API_BASE}/api/auth/connexion`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
@@ -34,7 +34,7 @@ async function apiConnexion(email, motDePasse) {
 }
 
 async function apiDeconnexion() {
-  const r = await fetch(`${API}/auth/deconnexion`, {
+  const r = await fetch(`${API_BASE}/api/auth/deconnexion`, {
     method: 'POST',
     credentials: 'include'
   });
@@ -43,36 +43,36 @@ async function apiDeconnexion() {
 
 async function apiSession() {
   // Vérifie si une session est active — appelé au chargement de chaque page
-  const r = await fetch(`${API}/auth/session`, { credentials: 'include' });
+  const r = await fetch(`${API_BASE}/api/auth/session`, { credentials: 'include' });
   return r.json();
 }
 
 async function apiProfil() {
-  const r = await fetch(`${API}/auth/profil`, { credentials: 'include' });
+  const r = await fetch(`${API_BASE}/api/auth/profil`, { credentials: 'include' });
   return r.json();
 }
 
 // ── Audio ────────────────────────────────────────────────────
 
 async function apiAudios() {
-  const r = await fetch(`${API}/audio`, { credentials: 'include' });
+  const r = await fetch(`${API_BASE}/api/audio`, { credentials: 'include' });
   return r.json();
 }
 
 async function apiAudiosParClasse(classe) {
-  const r = await fetch(`${API}/audio/classe/${classe}`, { credentials: 'include' });
+  const r = await fetch(`${API_BASE}/api/audio/classe/${classe}`, { credentials: 'include' });
   return r.json();
 }
 
 async function apiAudiosParLangue(langue) {
-  const r = await fetch(`${API}/audio/langue/${langue}`, { credentials: 'include' });
+  const r = await fetch(`${API_BASE}/api/audio/langue/${langue}`, { credentials: 'include' });
   return r.json();
 }
 
 // ── Quiz ─────────────────────────────────────────────────────
 
 async function apiSauvegarderQuiz(matiere, classe, difficulte, score, total) {
-  const r = await fetch(`${API}/quiz/resultat`, {
+  const r = await fetch(`${API_BASE}/api/quiz/resultat`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
@@ -82,14 +82,14 @@ async function apiSauvegarderQuiz(matiere, classe, difficulte, score, total) {
 }
 
 async function apiMesResultats() {
-  const r = await fetch(`${API}/quiz/mes-resultats`, { credentials: 'include' });
+  const r = await fetch(`${API_BASE}/api/quiz/mes-resultats`, { credentials: 'include' });
   return r.json();
 }
 
 // ── Contact ──────────────────────────────────────────────────
 
 async function apiContact(nom, email, sujet, message) {
-  const r = await fetch(`${API}/contact`, {
+  const r = await fetch(`${API_BASE}/api/contact`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
